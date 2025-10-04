@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Routes - Mobile</title>
+    <style>
+        :root {
+            --color-background: #f7f7f7;
+            --color-primary: #fff;
+            --color-secondary: #386fcf;
+            --color-hover: #00aaff;
+            --color-text: #101010;
+            --color-text-secondary: #fff;
+            --color-grey: #aaaa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: var(--color-primary);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            color: var(--color-secondary);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--color-text);
+            opacity: 0.8;
+            font-size: 16px;
+        }
+
+        /* Bus number button style */
+        .bus-number-button {
+            display: inline-block;
+            background-color: var(--color-secondary);
+            color: var(--color-text-secondary);
+            padding: 12px 8px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            height: 50px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bus-number-button:hover {
+            background-color: var(--color-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .bus-number-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .bus-number-button:focus {
+            outline: 2px solid var(--color-hover);
+            outline-offset: 2px;
+        }
+
+        .bus-number-button:disabled {
+            background-color: var(--color-grey);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Table styles */
+        .bus-routes-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            background-color: var(--color-primary);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title h2 {
+            margin: 0;
+            color: var(--color-secondary);
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .bus-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 8px;
+        }
+
+        .bus-table td {
+            padding: 0;
+            vertical-align: top;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 10px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .bus-number-button {
+                font-size: 14px;
+                height: 45px;
+                padding: 10px 6px;
+            }
+
+            .bus-table {
+                border-spacing: 6px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .bus-number-button {
+                font-size: 13px;
+                height: 42px;
+            }
+
+            .bus-table {
+                border-spacing: 4px;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: var(--color-primary);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .footer p {
+            margin: 0;
+            color: var(--color-text);
+            opacity: 0.7;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Linie autobusowe</h1>
+            <p>Wybierz numer linii autobusowej</p>
+        </div>
+
+        <!-- Main Bus Routes -->
+        <div class="bus-routes-section">
+            <div class="section-title">
+                <h2>Linie autobusowe</h2>
+            </div>
+            <table class="bus-table">
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('113')">113</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('114')">114</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('115')">115</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('116')">116</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('117')">117</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('118')">118</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('119')">119</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('120')">120</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('125')">125</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('130')">130</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('135')">135</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('140')">140</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('145')">145</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('150')">150</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('155')">155</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('160')">160</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('165')">165</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('170')">170</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('175')">175</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('180')">180</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('185')">185</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('190')">190</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('195')">195</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('200')">200</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('205')">205</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('210')">210</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('215')">215</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('220')">220</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('225')">225</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('230')">230</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('235')">235</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('240')">240</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('245')">245</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('250')">250</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('255')">255</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('260')">260</button></td>
+                </tr>
+            </table>
+            <!-- <table class="bus-table">
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('101')">101</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('102')">102</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('103')">103</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('104')">104</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('105')">105</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('106')">106</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('107')">107</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('108')">108</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('109')">109</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('110')">110</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('111')">111</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('112')">112</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('101')">101</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('102')">102</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('103')">103</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('104')">104</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('105')">105</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('106')">106</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('107')">107</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('108')">108</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('109')">109</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('110')">110</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('111')">111</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('112')">112</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('101')">101</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('102')">102</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('103')">103</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('104')">104</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('105')">105</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('106')">106</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('107')">107</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('108')">108</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('109')">109</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('110')">110</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('111')">111</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('112')">112</button></td>
+                </tr>
+            </table> -->
+        </div>
+
+    </div>
+
+    <script>
+        function selectBus(busNumber) {
+            // Show selection feedback
+            const button = event.target;
+            const originalBg = button.style.backgroundColor;
+            
+            // Visual feedback
+            button.style.backgroundColor = '#28a745';
+            button.innerHTML = '✓ ' + busNumber;
+            
+            // Reset after 1 second
+            setTimeout(() => {
+                button.style.backgroundColor = '';
+                button.innerHTML = busNumber;
+            }, 1000);
+
+            // Here you could add actual functionality like:
+            // - Navigate to route details
+            // - Show timetable
+            // - Open route map
+            // - Save to favorites
+            console.log('Selected bus route:', busNumber);
+            
+            // Example: You could redirect to a route details page
+            // window.location.href = '/route/' + busNumber;
+        }
+
+        // Add touch feedback for better mobile experience
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.bus-number-button');
+            
+            buttons.forEach(button => {
+                button.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                button.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
