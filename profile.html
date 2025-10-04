@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil użytkownika</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style_profile.css">
+</head>
+<body>
+    <div class="container">
+        <div class="avatar">
+            <img src="profile-example-avatar.png" alt="Avatar użytkownika">
+        </div>
+        <div class="welcome">
+            Witaj <span id="username">JanKowalski</span>
+        </div>
+        <div class="tiles">
+            <div class="tile">
+                <div class="points" id="points">1230</div>
+                <div class="points-label">Twoje punkty</div>
+            </div>
+            <div class="tile">
+                <div style="font-weight:600; margin-bottom:8px;">Ostatnie przejazdy</div>
+                <div class="rides-list" id="rides-list">
+                    <div class="ride-item">Plac Inwalidów → Stefana Batorego, 12.06.2024</div>
+                    <div class="ride-item">Cichy Kącik → Cichy Kącik, 10.06.2024</div>
+                    <div class="ride-item">Teatr Słowackiego → Lubicz, 08.06.2024</div>
+                    <!-- Kolejne przejazdy będą dodawane dynamicznie -->
+                </div>
+            </div>
+        </div>
+        <div class="stats-section">
+            <div class="stats-title">Statystyki</div>
+            <div class="stats-placeholder" id="stats">
+                <!-- Tu pojawią się wykresy/statystyki z backendu -->
+                Wczytywanie statystyk...
+            </div>
+        </div>
+    </div>
+</body>
+</html>
