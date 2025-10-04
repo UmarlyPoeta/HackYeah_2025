@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Stacja Autobusowa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style_bus_station.css">
+
+</head>
+<body>
+    <div class="container">
+        <div class="station-name" id="stationName">Dworzec Główny</div>
+
+        <div class="tiles">
+            <!-- Kafelek opóźnienia -->
+            <div class="tile">
+                <h2>Opóźnienia linii</h2>
+                <ul class="delays-list" id="delaysList">
+                    <!-- Przykładowe dane -->
+                    <li><span>105</span> <span>+3 min</span></li>
+                    <li><span>142</span> <span>+1 min</span></li>
+                    <li><span>207</span> <span>+7 min</span></li>
+                </ul>
+            </div>
+            <!-- Kafelek mapa -->
+            <div class="tile">
+                <h2>Mapa przystanku</h2>
+                <div class="map-placeholder" id="mapPlaceholder">
+                    <!-- Tu można wstawić mapę, np. iframe z OpenStreetMap -->
+                    <span>Mapa wczytuje się...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statystyki -->
+        <div class="stats-section" id="statsSection">
+            <div class="stats-title">Statystyki przystanku</div>
+            <div class="stats-list" id="statsList">
+                <!-- Przykładowe dane -->
+                <div class="stat-item">
+                    <div class="stat-label">Średnie opóźnienie</div>
+                    <div class="stat-value">2.5 min</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Liczba linii</div>
+                    <div class="stat-value">12</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Pasażerów dziennie</div>
+                    <div class="stat-value">4 200</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Przykładowy JS do dynamicznego ładowania danych -->
+    <script>
+        // Przykład pobierania statystyk z backendu
+        // fetch('/api/bus_station_stats?station_id=123')
+        //   .then(res => res.json())
+        //   .then(data => {
+        //     // Wypełnij delaysList, statsList, stationName, mapPlaceholder
+        //   });
+    </script>
+</body>
+</html>
