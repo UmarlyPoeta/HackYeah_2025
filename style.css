@@ -1,0 +1,68 @@
+:root {
+    --color-background: #f7f7f7;
+    --color-primary: #fff;
+    --color-secondary: #386fcf;
+    --color-hover: #00aaff;
+    --color-text: #101010;
+    --color-text-secondary: #fff;
+    --color-grey: #aaaa;
+
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-form {
+    background-color: var(--color-primary);
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.login-form img {
+    width: 80px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.login-input:focus {
+    border-color: var(--color-text);
+    outline: none;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 8px;
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background-color: var(--color-hover);
+}
