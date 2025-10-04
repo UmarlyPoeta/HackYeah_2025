@@ -439,6 +439,246 @@ namespace NikitaWebApiSolution.Controllers
 
             return Ok(new { success = true, data = result });
         }
+        // НОВЫЙ МЕТОД: GET api/buses/statistics - получить статистику по отчетам
+        [HttpGet("statistics")]
+        public async Task<IActionResult> GetBusStatistics()
+        {
+            try
+            {
+                var reports = await _context.BusReports.ToListAsync();
+
+                if (!reports.Any())
+                {
+                    return Ok(new
+                    {
+                        success = true,
+                        message = "No reports available for statistics",
+                        data = new object()
+                    });
+                }
+
+                // Статистика по уровням заполненности
+                var crowdingStats = reports
+                    .GroupBy(r => r.CrowdingLevel)
+                    .Select(g => new
+                    {
+                        Level = g.Key.ToString(),
+                        Count = g.Count(),
+                        Percentage = Math.Round((double)g.Count() / reports.Count * 100, 2)
+                    })
+                    .OrderByDescending(x => x.Count)
+                    .ToList();
+
+                // Статистика по задержкам
+                var delayStats = new
+                {
+                    AverageDelay = reports.Where(r => r.DelayMinutes.HasValue).Average(r => r.DelayMinutes) ?? 0,
+                    MaxDelay = reports.Where(r => r.DelayMinutes.HasValue).Max(r => r.DelayMinutes) ?? 0,
+                    MinDelay = reports.Where(r => r.DelayMinutes.HasValue).Min(r => r.DelayMinutes) ?? 0,
+                    DelayedBusesCount = reports.Count(r => r.DelayMinutes.HasValue && r.DelayMinutes > 0),
+                    OnTimeBusesCount = reports.Count(r => r.DelayMinutes.HasValue && r.DelayMinutes == 0)
+                };
+
+                // Статистика по поломкам
+                var failureStats = reports
+                    .Where(r => r.VehicleFailure.HasValue)
+                    .GroupBy(r => r.VehicleFailure)
+                    .Select(g => new
+                    {
+                        FailureType = g.Key?.ToString() ?? "Unknown",
+                        Count = g.Count(),
+                        Percentage = Math.Round((double)g.Count() / reports.Count(r => r.VehicleFailure.HasValue) * 100, 2)
+                    })
+                    .ToList();
+
+                // Статистика по кондиционерам
+                var acStats = reports
+                    .Where(r => r.AirConditioning.HasValue)
+                    .GroupBy(r => r.AirConditioning)
+                    .Select(g => new
+                    {
+                        ACStatus = g.Key?.ToString() ?? "Unknown",
+                        Count = g.Count(),
+                        Percentage = Math.Round((double)g.Count() / reports.Count(r => r.AirConditioning.HasValue) * 100, 2)
+                    })
+                    .OrderByDescending(x => x.Count)
+                    .ToList();
+
+                // Статистика по запахам
+                var smellStats = reports
+                    .Where(r => r.SmellLevel.HasValue)
+                    .GroupBy(r => r.SmellLevel)
+                    .Select(g => new
+                    {
+                        SmellLevel = g.Key?.ToString() ?? "Unknown",
+                        Count = g.Count(),
+                        Percentage = Math.Round((double)g.Count() / reports.Count(r => r.SmellLevel.HasValue) * 100, 2)
+                    })
+                    .OrderByDescending(x => x.Count)
+                    .ToList();
+
+                // Статистика по номерам автобусов (топ 10 проблемных)
+                var busNumberStats = reports
+                    .GroupBy(r => r.BusNumber)
+                    .Select(g => new
+                    {
+                        BusNumber = g.Key,
+                        ReportCount = g.Count(),
+                        AverageDelay = g.Where(r => r.DelayMinutes.HasValue).Average(r => r.DelayMinutes) ?? 0,
+                        MostCommonCrowding = g.GroupBy(r => r.CrowdingLevel)
+                                            .OrderByDescending(gr => gr.Count())
+                                            .First().Key.ToString(),
+                        ProblemScore = CalculateProblemScore(g.ToList())
+                    })
+                    .OrderByDescending(x => x.ProblemScore)
+                    .Take(10)
+                    .ToList();
+
+                // Временная статистика (отчеты по часам)
+                var hourlyStats = reports
+                    .GroupBy(r => r.ReportDate.Hour)
+                    .Select(g => new
+                    {
+                        Hour = g.Key,
+                        ReportCount = g.Count(),
+                        AverageCrowding = (int)Math.Round(g.Average(r => (int)r.CrowdingLevel))
+                    })
+                    .OrderBy(x => x.Hour)
+                    .ToList();
+
+                var result = new
+                {
+                    Summary = new
+                    {
+                        TotalReports = reports.Count,
+                        TimeRange = new
+                        {
+                            OldestReport = reports.Min(r => r.ReportDate),
+                            NewestReport = reports.Max(r => r.ReportDate)
+                        },
+                        ReportsWithComments = reports.Count(r => !string.IsNullOrEmpty(r.AdditionalComments))
+                    },
+                    CrowdingStatistics = crowdingStats,
+                    DelayStatistics = delayStats,
+                    FailureStatistics = failureStats,
+                    AirConditioningStatistics = acStats,
+                    SmellStatistics = smellStats,
+                    TopProblematicBuses = busNumberStats,
+                    HourlyDistribution = hourlyStats,
+                    ProblematicTrends = AnalyzeProblematicTrends(reports)
+                };
+
+                return Ok(new { success = true, data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Error generating statistics", error = ex.Message });
+            }
+        }
+        private static double CalculateProblemScore(List<BusReport> reports)
+        {
+            double score = 0;
+
+            foreach (var report in reports)
+            {
+                // Вес факторов
+                score += (int)report.CrowdingLevel * 1.5; // Высокая заполненность = больше проблем
+                score += (report.DelayMinutes ?? 0) * 0.1; // Задержки увеличивают счет
+                score += report.VehicleFailure.HasValue ? 3 : 0; // Поломки серьезно увеличивают счет
+                score += report.AirConditioning == AirConditioning.Oven ? 2 : 0; // Плохой кондиционер
+                score += (int)(report.SmellLevel ?? 0) * 1.2; // Запахи увеличивают счет
+            }
+
+            return Math.Round(score / reports.Count, 2); // Нормализуем по количеству отчетов
+        }
+
+        // Вспомогательный метод для анализа трендов проблем
+        private static object AnalyzeProblematicTrends(List<BusReport> reports)
+        {
+            var lastWeekReports = reports.Where(r => r.ReportDate >= DateTime.UtcNow.AddDays(-7)).ToList();
+
+            if (!lastWeekReports.Any())
+                return new { Message = "Insufficient data for trend analysis" };
+
+            var dailyStats = lastWeekReports
+                .GroupBy(r => r.ReportDate.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    ReportCount = g.Count(),
+                    AverageCrowding = Math.Round(g.Average(r => (int)r.CrowdingLevel), 2),
+                    ProblematicReports = g.Count(r =>
+                        r.CrowdingLevel >= CrowdingLevel.High ||
+                        r.VehicleFailure.HasValue ||
+                        r.AirConditioning == AirConditioning.Oven ||
+                        (r.SmellLevel ?? 0) >= SmellLevel.Smelly)
+                })
+                .OrderBy(x => x.Date)
+                .ToList();
+
+            var crowdingTrend = dailyStats.Count > 1 ?
+                (dailyStats.Last().AverageCrowding - dailyStats.First().AverageCrowding) : 0;
+
+            var problemTrend = dailyStats.Count > 1 ?
+                (dailyStats.Last().ProblematicReports - dailyStats.First().ProblematicReports) : 0;
+
+            return new
+            {
+                AnalysisPeriod = "Last 7 days",
+                TotalDays = dailyStats.Count,
+                AverageDailyReports = Math.Round(dailyStats.Average(x => x.ReportCount), 1),
+                CrowdingTrend = crowdingTrend > 0 ? "Increasing" : crowdingTrend < 0 ? "Decreasing" : "Stable",
+                ProblemTrend = problemTrend > 0 ? "Worsening" : problemTrend < 0 ? "Improving" : "Stable",
+                WorstDay = dailyStats.OrderByDescending(x => x.ProblematicReports).FirstOrDefault()?.Date,
+                DailyBreakdown = dailyStats
+            };
+        }
+
+        // НОВЫЙ МЕТОД: GET api/buses/statistics/summary - краткая статистика
+        [HttpGet("statistics/summary")]
+        public async Task<IActionResult> GetStatisticsSummary()
+        {
+            var reports = await _context.BusReports.ToListAsync();
+
+            if (!reports.Any())
+            {
+                return Ok(new
+                {
+                    success = true,
+                    message = "No reports available",
+                    data = new { TotalReports = 0 }
+                });
+            }
+
+            var summary = new
+            {
+                TotalReports = reports.Count,
+                MostCommonProblem = GetMostCommonProblem(reports),
+                AverageCrowdingLevel = reports.Average(r => (int)r.CrowdingLevel),
+                BusesWithProblems = reports.Count(r =>
+                    r.CrowdingLevel >= CrowdingLevel.High ||
+                    r.VehicleFailure.HasValue ||
+                    r.DelayMinutes > 10),
+                RecentReports = reports.Count(r => r.ReportDate >= DateTime.UtcNow.AddHours(-24))
+            };
+
+            return Ok(new { success = true, data = summary });
+        }
+
+        // Вспомогательный метод для определения самой частой проблемы
+        private static string GetMostCommonProblem(List<BusReport> reports)
+        {
+            var problems = new Dictionary<string, int>
+            {
+                ["High Crowding"] = reports.Count(r => r.CrowdingLevel >= CrowdingLevel.High),
+                ["Vehicle Failure"] = reports.Count(r => r.VehicleFailure.HasValue),
+                ["Bad AC"] = reports.Count(r => r.AirConditioning == AirConditioning.Oven || r.AirConditioning == AirConditioning.Warm),
+                ["Bad Smell"] = reports.Count(r => r.SmellLevel >= SmellLevel.Smelly),
+                ["Long Delay"] = reports.Count(r => r.DelayMinutes > 15)
+            };
+
+            return problems.OrderByDescending(p => p.Value).First().Key;
+        }
     }
 
     // Request and Response DTOs
