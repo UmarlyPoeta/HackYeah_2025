@@ -1,5 +1,4 @@
-﻿using BusTrackingApp.Controllers;
-
+﻿using NikitaWebApiSolution.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,57 +34,72 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        // Создаем базу данных и таблицы, если их нет
-        context.Database.EnsureCreated();
-        Console.WriteLine("Database created successfully");
+        // УДАЛИТЕ старую базу данных если существует
+        // context.Database.EnsureDeleted();
 
-        // Добавляем тестовые данные, если таблица пустая
-        if (!context.Buses.Any())
+        // Создаем базу данных и таблицы, если их нет
+        var created = context.Database.EnsureCreated();
+        Console.WriteLine($"Database created: {created}");
+
+        // Проверяем существование таблиц
+        var busTableExists = context.Buses.Any();
+        var reportTableExists = context.BusReports.Any();
+
+        Console.WriteLine($"Bus table exists: {busTableExists}");
+        Console.WriteLine($"BusReports table exists: {reportTableExists}");
+
+        // Если таблица BusReports пустая, добавляем тестовые данные
+        if (!context.BusReports.Any())
         {
-            context.Buses.AddRange(
-                new Bus
+            Console.WriteLine("Adding test report data...");
+            context.BusReports.AddRange(
+                new BusReport
                 {
-                    LicensePlate = "А123АА777",
-                    Model = "PAZ-3205",
-                    Capacity = 45,
-                    BusNumber = "101",
-                    CurrentLatitude = 55.7558,
-                    CurrentLongitude = 37.6173,
-                    Status = BusStatus.Active,
-                    LastUpdate = DateTime.UtcNow
+                    BusNumber = 101,
+                    CrowdingLevel = CrowdingLevel.High,
+                    DelayMinutes = 10,
+                    VehicleFailure = VehicleFailure.Temporary,
+                    AirConditioning = AirConditioning.Good,
+                    SmellLevel = SmellLevel.LightSmell,
+                    AdditionalComments = "Автобус переполнен в час пик",
+                    ReportDate = DateTime.UtcNow.AddHours(-1),
+                    UserIP = "127.0.0.1"
                 },
-                new Bus
+                new BusReport
                 {
-                    LicensePlate = "В456ВВ777",
-                    Model = "LiAZ-5292",
-                    Capacity = 85,
-                    BusNumber = "205",
-                    CurrentLatitude = 55.7517,
-                    CurrentLongitude = 37.6178,
-                    Status = BusStatus.Active,
-                    LastUpdate = DateTime.UtcNow
+                    BusNumber = 205,
+                    CrowdingLevel = CrowdingLevel.Medium,
+                    DelayMinutes = 5,
+                    VehicleFailure = null,
+                    AirConditioning = AirConditioning.Cool,
+                    SmellLevel = SmellLevel.Violets,
+                    AdditionalComments = "Все в порядке, едет по расписанию",
+                    ReportDate = DateTime.UtcNow.AddMinutes(-30),
+                    UserIP = "127.0.0.1"
                 },
-                new Bus
+                new BusReport
                 {
-                    LicensePlate = "С789СС777",
-                    Model = "MAZ-203",
-                    Capacity = 90,
-                    BusNumber = "156",
-                    Status = BusStatus.Maintenance,
-                    LastUpdate = DateTime.UtcNow.AddHours(-2)
+                    BusNumber = 156,
+                    CrowdingLevel = CrowdingLevel.Low,
+                    DelayMinutes = 25,
+                    VehicleFailure = VehicleFailure.Complete,
+                    AirConditioning = AirConditioning.Oven,
+                    SmellLevel = SmellLevel.VerySmelly,
+                    AdditionalComments = "Автобус сломан, стоит на остановке",
+                    ReportDate = DateTime.UtcNow.AddHours(-2),
+                    UserIP = "127.0.0.1"
                 }
             );
             context.SaveChanges();
-            Console.WriteLine("Test data added successfully");
+            Console.WriteLine("Test report data added successfully");
         }
-        else
-        {
-            Console.WriteLine("Database already contains data");
-        }
+
+        Console.WriteLine($"Database initialized: {context.Buses.Count()} buses, {context.BusReports.Count()} reports");
     }
     catch (Exception ex)
     {
         Console.WriteLine($"Error initializing database: {ex.Message}");
+        Console.WriteLine($"Full error: {ex}");
     }
 }
 
@@ -99,11 +113,5 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
-
-// Выводим информацию о доступных адресах
-Console.WriteLine("Application is running on:");
-Console.WriteLine("Local: http://localhost:5041");
-Console.WriteLine("Network: http://[your-ip-address]:5041");
-Console.WriteLine("Swagger: http://localhost:5041/swagger");
 
 app.Run();

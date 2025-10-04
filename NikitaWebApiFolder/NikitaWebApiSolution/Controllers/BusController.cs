@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-namespace BusTrackingApp.Controllers
+using NikitaWebApiSolution.Models;
+
+namespace NikitaWebApiSolution.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -338,112 +338,106 @@ namespace BusTrackingApp.Controllers
 
             return Ok(new { success = true, data = result });
         }
-    }
 
-    // Data models
-    public class Bus
-    {
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        public string LicensePlate { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(50)]
-        public string Model { get; set; } = string.Empty;
-
-        [Required]
-        [Range(1, 200)]
-        public int Capacity { get; set; }
-
-        [Required]
-        [StringLength(10)]
-        public string BusNumber { get; set; } = string.Empty;
-
-        public double? CurrentLatitude { get; set; }
-        public double? CurrentLongitude { get; set; }
-        public double? Speed { get; set; }
-        public double? Bearing { get; set; }
-
-        [Required]
-        public BusStatus Status { get; set; }
-
-        [Required]
-        public DateTime LastUpdate { get; set; }
-    }
-
-    public enum BusStatus
-    {
-        Active = 0,
-        Inactive = 1,
-        Maintenance = 2,
-        OutOfService = 3
-    }
-    public class BusDbContext : DbContext
-    {
-        public DbSet<Bus> Buses { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // НОВЫЙ МЕТОД: POST api/buses/report - отчет о состоянии автобуса
+        [HttpPost("report")]
+        public async Task<IActionResult> CreateBusReport([FromBody] CreateBusReportRequest request)
         {
-            optionsBuilder.UseSqlite("Data Source=bustracking.db");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = ModelState.Values.SelectMany(v => v.Errors)
+                });
+            }
+
+            // Получаем IP пользователя
+            var userIP = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            var report = new BusReport
+            {
+                BusNumber = request.BusNumber,
+                CrowdingLevel = request.CrowdingLevel,
+                DelayMinutes = request.DelayMinutes,
+                VehicleFailure = request.VehicleFailure,
+                AirConditioning = request.AirConditioning,
+                SmellLevel = request.SmellLevel,
+                AdditionalComments = request.AdditionalComments,
+                ReportDate = DateTime.UtcNow,
+                UserIP = userIP
+            };
+
+            _context.BusReports.Add(report);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Bus report submitted successfully",
+                data = new
+                {
+                    report.Id,
+                    report.BusNumber,
+                    CrowdingLevel = report.CrowdingLevel.ToString(),
+                    report.DelayMinutes,
+                    VehicleFailure = report.VehicleFailure?.ToString(),
+                    AirConditioning = report.AirConditioning?.ToString(),
+                    SmellLevel = report.SmellLevel?.ToString(),
+                    report.ReportDate
+                }
+            });
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        // НОВЫЙ МЕТОД: GET api/buses/reports - получить все отчеты
+        [HttpGet("reports")]
+        public async Task<IActionResult> GetAllBusReports()
         {
-            modelBuilder.Entity<Bus>()
-                .HasIndex(b => b.LicensePlate)
-                .IsUnique();
+            var reports = await _context.BusReports
+                .OrderByDescending(r => r.ReportDate)
+                .ToListAsync();
 
-            modelBuilder.Entity<Bus>()
-                .Property(b => b.Status)
-                .HasConversion<int>();
+            var result = reports.Select(r => new
+            {
+                r.Id,
+                r.BusNumber,
+                CrowdingLevel = r.CrowdingLevel.ToString(),
+                r.DelayMinutes,
+                VehicleFailure = r.VehicleFailure?.ToString(),
+                AirConditioning = r.AirConditioning?.ToString(),
+                SmellLevel = r.SmellLevel?.ToString(),
+                r.AdditionalComments,
+                r.ReportDate,
+                r.UserIP
+            }).ToList();
 
-            // Seed data
-            modelBuilder.Entity<Bus>().HasData(
-                new Bus
-                {
-                    Id = 1,
-                    LicensePlate = "А123АА777",
-                    Model = "PAZ-3205",
-                    Capacity = 45,
-                    BusNumber = "101",
-                    CurrentLatitude = 55.7558,
-                    CurrentLongitude = 37.6173,
-                    Speed = null,
-                    Bearing = null,
-                    Status = BusStatus.Active,
-                    LastUpdate = DateTime.UtcNow
-                },
-                new Bus
-                {
-                    Id = 2,
-                    LicensePlate = "В456ВВ777",
-                    Model = "LiAZ-5292",
-                    Capacity = 85,
-                    BusNumber = "205",
-                    CurrentLatitude = 55.7517,
-                    CurrentLongitude = 37.6178,
-                    Speed = null,
-                    Bearing = null,
-                    Status = BusStatus.Active,
-                    LastUpdate = DateTime.UtcNow
-                },
-                new Bus
-                {
-                    Id = 3,
-                    LicensePlate = "С789СС777",
-                    Model = "MAZ-203",
-                    Capacity = 90,
-                    BusNumber = "156",
-                    CurrentLatitude = null,
-                    CurrentLongitude = null,
-                    Speed = null,
-                    Bearing = null,
-                    Status = BusStatus.Maintenance,
-                    LastUpdate = DateTime.UtcNow.AddHours(-2)
-                }
-            );
+            return Ok(new { success = true, data = result });
+        }
+
+        // НОВЫЙ МЕТОД: GET api/buses/101/reports - получить отчеты по номеру автобуса
+        [HttpGet("{busNumber}/reports")]
+        public async Task<IActionResult> GetBusReportsByNumber(int busNumber)
+        {
+            var reports = await _context.BusReports
+                .Where(r => r.BusNumber == busNumber)
+                .OrderByDescending(r => r.ReportDate)
+                .ToListAsync();
+
+            var result = reports.Select(r => new
+            {
+                r.Id,
+                r.BusNumber,
+                CrowdingLevel = r.CrowdingLevel.ToString(),
+                r.DelayMinutes,
+                VehicleFailure = r.VehicleFailure?.ToString(),
+                AirConditioning = r.AirConditioning?.ToString(),
+                SmellLevel = r.SmellLevel?.ToString(),
+                r.AdditionalComments,
+                r.ReportDate,
+                r.UserIP
+            }).ToList();
+
+            return Ok(new { success = true, data = result });
         }
     }
 
@@ -507,6 +501,29 @@ namespace BusTrackingApp.Controllers
     {
         [Required(ErrorMessage = "Status is required")]
         public BusStatus Status { get; set; }
+    }
+
+    // DTO для создания отчета о состоянии автобуса
+    public class CreateBusReportRequest
+    {
+        [Required(ErrorMessage = "Bus number is required")]
+        [Range(1, 999, ErrorMessage = "Bus number must be between 1 and 999")]
+        public int BusNumber { get; set; }
+
+        [Required(ErrorMessage = "Crowding level is required")]
+        public CrowdingLevel CrowdingLevel { get; set; }
+
+        [Range(0, 300, ErrorMessage = "Delay must be between 0 and 300 minutes")]
+        public int? DelayMinutes { get; set; }
+
+        public VehicleFailure? VehicleFailure { get; set; }
+
+        public AirConditioning? AirConditioning { get; set; }
+
+        public SmellLevel? SmellLevel { get; set; }
+
+        [StringLength(500, ErrorMessage = "Additional comments cannot exceed 500 characters")]
+        public string? AdditionalComments { get; set; }
     }
 
     public class BusResponse
