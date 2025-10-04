@@ -1,13 +1,13 @@
-package com.patryk.passTheLine;
+package com.tripdelay.delaymanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PassTheLineApplication {
+public class DelayManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PassTheLineApplication.class, args);
+		SpringApplication.run(DelayManagementApplication.class, args);
 	}
 
 }
