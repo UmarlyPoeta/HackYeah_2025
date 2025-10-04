@@ -8,6 +8,18 @@
 
 </head>
 <body>
+    <div class="top-bar">
+        <div class="user-name">Welcome, User</div>
+        <div class="dropdown">
+            <button class="dropbtn">Menu &#9662;</button>
+            <div class="dropdown-content">
+                <a href="main_page.html">Main Page</a>
+                <a href="#">Kontakt</a>
+                <a href="profile.html">Profil użytkownika</a>
+                <a href="login.html">Wyloguj</a>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="station-name" id="stationName">Dworzec Główny</div>
 
@@ -26,8 +38,7 @@
             <div class="tile">
                 <h2>Mapa przystanku</h2>
                 <div class="map-placeholder" id="mapPlaceholder">
-                    <!-- Tu można wstawić mapę, np. iframe z OpenStreetMap -->
-                    <span>Mapa wczytuje się...</span>
+                    <iframe src="mapa.html"></iframe>
                 </div>
             </div>
         </div>

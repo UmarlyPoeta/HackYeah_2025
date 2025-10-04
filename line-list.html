@@ -6,14 +6,14 @@
     <title>Bus Routes - Mobile</title>
     <style>
         :root {
-            --color-background: #f7f7f7;
-            --color-primary: #fff;
-            --color-secondary: #386fcf;
-            --color-hover: #00aaff;
-            --color-text: #101010;
-            --color-text-secondary: #fff;
-            --color-grey: #aaaa;
-        }
+           --color-background: #f7f7f7;
+        --color-primary: #fff;
+        --color-secondary: #38cf47;
+        --color-hover: #1f7c2b;
+        --color-text: #101010;
+        --color-text-secondary: #fff;
+        --color-grey: #aaaaaa;
+    }
 
         * {
             box-sizing: border-box;
@@ -185,9 +185,100 @@
             opacity: 0.7;
             font-size: 14px;
         }
+        .top-bar {
+    background-color: var(--color-background); /* #f7f7f7 - light gray 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;*/
+    top: 0;
+    z-index: 100;
+    width: 100%;
+   /* position: fixed;*/
+    display: flex;                  /* horizontal layout */
+    align-items: center;            /* vertically center items */
+    gap: 15px;                      /* space between username and menu */
+    padding: 10px 20px;             /* nice spacing inside bar */
+    z-index: 1000;
+    justify-content: flex-start;    /* keep everything on the left */
+}
+.user-name {
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 36px; /* match approx height of dropbtn */
+}
+
+
+.status-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+}
+
+.dropdown { 
+   position: absolute;
+   right: 0; 
+   margin: 5px;
+}
+
+.dropbtn {
+    background-color: var(--color-secondary);
+    color: white;
+    padding: 8px 18px;
+    font-size: 16px;
+    line-height: 36px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%; /* appear below the button */
+  right: 0;   /* align under button, not right corner */
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  z-index: 999;
+}
+
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: var(--color-hover);
+}
     </style>
 </head>
 <body>
+     <div class="top-bar">
+        <div class="user-name">Welcome, User</div>
+        <div class="dropdown">
+            <button class="dropbtn">Menu &#9662;</button>
+            <div class="dropdown-content">
+                <a href="main_page.html">Main Page</a>
+                <a href="#">Kontakt</a>
+                <a href="profile.html">Profil użytkownika</a>
+                <a href="login.html">Wyloguj</a>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <!-- Header -->
         <div class="header">
