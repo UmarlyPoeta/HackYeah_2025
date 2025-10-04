@@ -344,3 +344,8 @@ background-color: var(--color-background);
 .dropdown:hover .dropbtn {
     background-color: var(--color-hover);
 }
+
+.logo {
+    max-width: 250px;
+    max-height: 250px;
+}
