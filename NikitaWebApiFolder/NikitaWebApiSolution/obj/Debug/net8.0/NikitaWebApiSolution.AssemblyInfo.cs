@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NikitaWebApiSolution")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aedf033712bf00e87dc4c4c7008fede08fb04182")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2a3fe318e0173f92780741f4c9bb552a26f7604")]
 [assembly: System.Reflection.AssemblyProductAttribute("NikitaWebApiSolution")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NikitaWebApiSolution")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<BusDbContext>();
 
 // Слушаем на всех сетевых интерфейсах для внешнего подключения
-builder.WebHost.UseUrls("http://*:5041");
+builder.WebHost.UseUrls("http://192.168.137.1:5041");
 
 var app = builder.Build();
 
