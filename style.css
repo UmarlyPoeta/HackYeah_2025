@@ -57,7 +57,7 @@ background-color: var(--color-background);
     top: 0;
     z-index: 100;
     width: 100%;
-    position: absolute;
+    position: fixed;
     display: flex;                  /* horizontal layout */
     align-items: center;            /* vertically center items */
     gap: 15px;                      /* space between username and menu */
