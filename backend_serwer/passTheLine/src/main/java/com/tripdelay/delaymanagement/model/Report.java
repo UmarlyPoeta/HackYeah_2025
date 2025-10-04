@@ -30,9 +30,20 @@ public class Report {
 
     private int votes = 0;
 
-    // Add route or line info if needed
-}
+    // New fields for the HTML form
+    private Integer lineNumber; // Numer linii
 
-enum ReportType {
-    DELAY, DISRUPTION
+    @Enumerated(EnumType.STRING)
+    private CrowdLevel crowdLevel; // Poziom zatłoczenia
+
+    private Integer delayMinutes; // Opóźnienie w minutach
+
+    @Enumerated(EnumType.STRING)
+    private VehicleFailure vehicleFailure; // Awaria pojazdu
+
+    @Enumerated(EnumType.STRING)
+    private AirConditioning airConditioning; // Klimatyzacja
+
+    @Enumerated(EnumType.STRING)
+    private Smell smell; // Wrażenia zapachowe
 }

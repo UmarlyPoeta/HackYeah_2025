@@ -1,0 +1,121 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(
+        180deg,
+        #3ecf4a 0%,
+        #3ecf4a 33%,
+        rgba(62, 207, 74, 0.2) 60%,
+        #fff 100%
+    );
+    /* Zielona poświata */
+    box-shadow: 0 0 120px 40px #3ecf4a55 inset;
+}
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 16px 16px 16px;
+}
+.station-name {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 2px 16px #3ecf4a, 0 1px 0 #222;
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+    background: rgba(62, 207, 74, 0.15);
+    display: inline-block;
+    padding: 10px 28px 10px 12px;
+    border-radius: 0 18px 18px 0;
+}
+.tiles {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+}
+.tile {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px 0 #3ecf4a22;
+    padding: 24px 20px;
+    flex: 1 1 320px;
+    min-width: 280px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.tile h2 {
+    font-size: 1.2rem;
+    margin: 0 0 16px 0;
+    color: #3ecf4a;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.delays-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.delays-list li {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #222;
+    background: #eafbe7;
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.map-placeholder {
+    flex: 1;
+    background: #eafbe7;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3ecf4a;
+    font-size: 1.1rem;
+    min-height: 120px;
+    margin-top: 8px;
+}
+.stats-section {
+    margin-top: 24px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 16px #3ecf4a11;
+    padding: 24px 20px;
+}
+.stats-title {
+    font-size: 1.15rem;
+    color: #3ecf4a;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+.stats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+.stat-item {
+    min-width: 120px;
+    margin-bottom: 12px;
+}
+.stat-label {
+    color: #666;
+    font-size: 0.98rem;
+}
+.stat-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #222;
+}
+@media (max-width: 700px) {
+    .tiles {
+        flex-direction: column;
+        gap: 16px;
+    }
+}

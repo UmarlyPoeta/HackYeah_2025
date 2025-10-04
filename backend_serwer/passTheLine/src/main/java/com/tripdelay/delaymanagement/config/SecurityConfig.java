@@ -26,6 +26,11 @@ public class SecurityConfig {
             .cors().and()
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/reports/**").permitAll()
+                .requestMatchers("/*.html").permitAll()
+                .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/js/**").permitAll()
+                .requestMatchers("/").permitAll()
                 .anyRequest().authenticated()
             )
             .httpBasic();

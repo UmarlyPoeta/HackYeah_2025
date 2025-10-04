@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zgłoś problem</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mobile-form">
+    <div class="top-bar">
+        <div class="user-name">Zgłoś problem</div>
+        <div class="status-circle"></div>
+    </div>
+
+    <div class="main-content">
+        <form id="reportForm">
+            <div class="form-row">
+                <label class="form-label">Numer linii</label>
+                <div class="form-input">
+                    <input type="number" name="lineNumber" placeholder="Numer linii" step="1">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Poziom zatłoczenia</label>
+                <div class="form-input">
+                    <select name="crowdLevel">
+                        <option value="">Wybierz poziom zatłoczenia</option>
+                        <option value="LOW">Niski</option>
+                        <option value="MEDIUM">Średni</option>
+                        <option value="HIGH">Wysoki</option>
+                        <option value="URGENT">Bardzo wysoki</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Opóźnienie</label>
+                <div class="form-input">
+                    <input type="number" name="delayMinutes" placeholder="Minuty" step="1">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Awaria pojazdu</label>
+                <div class="form-input">
+                    <select name="vehicleFailure">
+                        <option value="">Wybierz status</option>
+                        <option value="TEMPORARY">Chwilowa awaria</option>
+                        <option value="COMPLETE">Całkowita awaria</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Jak działa klimatyzacja?</label>
+                <div class="form-input">
+                    <select name="airConditioning">
+                        <option value="">Wybierz opcję</option>
+                        <option value="FREEZING">Lodowato</option>
+                        <option value="COOL">Chłodno</option>
+                        <option value="GOOD">Dobrze</option>
+                        <option value="WARM">Za ciepło</option>
+                        <option value="OVEN">Piekarnik</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Wrażenia zapachowe</label>
+                <div class="form-input">
+                    <select name="smell">
+                        <option value="">Wybierz opcję</option>
+                        <option value="FLOWERS">Fiołki</option>
+                        <option value="SLIGHT_SMELL">Lekko śmierdzi</option>
+                        <option value="STINKS">Cuchnie</option>
+                        <option value="VERY_STINKS">Bardzo śmierdzi</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <button type="submit" class="submit-btn" onclick="submitReport()">
+        <span>✈</span>
+        Zgłoś problem
+    </button>
+
+    <script>
+        async function submitReport() {
+            const form = document.getElementById('reportForm');
+            const formData = new FormData(form);
+            const data = new URLSearchParams();
+
+            for (let [key, value] of formData) {
+                if (value) data.append(key, value);
+            }
+
+            try {
+                const response = await fetch('/api/reports/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Basic ' + btoa('testuser:testpass') // Zmień na prawdziwe credentials
+                    },
+                    body: data
+                });
+
+                if (response.ok) {
+                    alert('Zgłoszenie wysłane pomyślnie!');
+                    form.reset();
+                } else {
+                    alert('Błąd podczas wysyłania zgłoszenia');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Błąd połączenia');
+            }
+        }
+    </script>
+</body>
+</html>

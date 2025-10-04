@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Routes - Mobile</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Linie autobusowe</h1>
+            <p>Wybierz numer linii autobusowej</p>
+        </div>
+
+        <!-- Main Bus Routes -->
+        <div class="bus-routes-section">
+            <div class="section-title">
+                <h2>Linie autobusowe</h2>
+            </div>
+            <table class="bus-table">
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('113')">113</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('114')">114</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('115')">115</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('116')">116</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('117')">117</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('118')">118</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('119')">119</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('120')">120</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('125')">125</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('130')">130</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('135')">135</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('140')">140</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('145')">145</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('150')">150</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('155')">155</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('160')">160</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('165')">165</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('170')">170</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('175')">175</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('180')">180</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('185')">185</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('190')">190</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('195')">195</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('200')">200</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('205')">205</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('210')">210</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('215')">215</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('220')">220</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('225')">225</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('230')">230</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('235')">235</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('240')">240</button></td>
+                </tr>
+                <tr>
+                    <td><button class="bus-number-button" onclick="selectBus('245')">245</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('250')">250</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('255')">255</button></td>
+                    <td><button class="bus-number-button" onclick="selectBus('260')">260</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function selectBus(busNumber) {
+            // Show selection feedback
+            const button = event.target;
+            const originalBg = button.style.backgroundColor;
+
+            // Visual feedback
+            button.style.backgroundColor = '#28a745';
+            button.innerHTML = '✓ ' + busNumber;
+
+            // Reset after 1 second
+            setTimeout(() => {
+                button.style.backgroundColor = '';
+                button.innerHTML = busNumber;
+            }, 1000);
+
+            // Here you could add actual functionality like:
+            // - Navigate to route details
+            // - Show timetable
+            // - Open route map
+            // - Save to favorites
+            console.log('Selected bus route:', busNumber);
+
+            // Example: You could redirect to a route details page
+            // window.location.href = '/route/' + busNumber;
+        }
+
+        // Add touch feedback for better mobile experience
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.bus-number-button');
+
+            buttons.forEach(button => {
+                button.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+
+                button.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

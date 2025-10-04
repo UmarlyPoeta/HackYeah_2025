@@ -1,0 +1,301 @@
+:root {
+    --color-background: #f7f7f7;
+    --color-primary: #fff;
+    --color-secondary: #386fcf;
+    --color-hover: #00aaff;
+    --color-text: #101010;
+    --color-text-secondary: #fff;
+    --color-grey: #aaaaaa;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+.mobile-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+.top-bar {
+    background-color: var(--color-primary);
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.status-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.form-row {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.form-input input,
+.form-input select,
+.form-input textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-primary);
+}
+
+.form-input input:focus,
+.form-input select:focus,
+.form-input textarea:focus {
+    border-color: var(--color-secondary);
+    outline: none;
+}
+
+.submit-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--color-secondary);
+    color: var(--color-text-secondary);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.submit-btn:hover {
+    background-color: var(--color-hover);
+}
+
+/* Original styles kept for compatibility */
+.main {
+    background-color: var(--color-primary);
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.main img {
+    width: 80px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.login-input:focus {
+    border-color: var(--color-text);
+    outline: none;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 8px;
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background-color: var(--color-hover);
+}
+
+/* Bus number button style */
+.bus-number-button {
+    display: inline-block;
+    background-color: var(--color-secondary);
+    color: var(--color-text-secondary);
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    min-width: 50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    user-select: none;
+}
+
+.bus-number-button:hover {
+    background-color: var(--color-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.bus-number-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.bus-number-button:focus {
+    outline: 2px solid var(--color-hover);
+    outline-offset: 2px;
+}
+
+/* Variant for disabled state */
+.bus-number-button:disabled {
+    background-color: var(--color-grey);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Variant for smaller size */
+.bus-number-button.small {
+    padding: 6px 12px;
+    font-size: 14px;
+    min-width: 40px;
+}
+
+/* Variant for larger size */
+.bus-number-button.large {
+    padding: 12px 20px;
+    font-size: 18px;
+    min-width: 60px;
+}
+
+.login-form {
+    background-color: var(--color-primary);
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.login-form img {
+    width: 80px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+#select {
+    margin-bottom: 10px;
+}
+
+#tile-buttons {
+    display: grid;
+    column-gap: 5px;
+    row-gap: 5px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#tile-buttons button{
+    width: 80%;
+    height: 6vh;
+    justify-self: center;
+}
+
+#tile-button1 {
+    grid-row: 1;
+    grid-column: 1;
+}
+#tile-button2 {
+    grid-row: 1;
+    grid-column: 2;
+}
+#tile-button3 {
+    grid-row: 2;
+    grid-column: 1;
+}
+#tile-button4 {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+.dropdown {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 100;
+}
+.dropbtn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 18px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropbtn {background-color: #2980b9;}
