@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NikitaWebApiSolution", "NikitaWebApiSolution.csproj", "{0641F42C-9076-4B3A-ACE2-161115903286}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0641F42C-9076-4B3A-ACE2-161115903286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0641F42C-9076-4B3A-ACE2-161115903286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0641F42C-9076-4B3A-ACE2-161115903286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0641F42C-9076-4B3A-ACE2-161115903286}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B7C6E91-6C3D-4BA1-94D7-B6F6A3BD6464}
+	EndGlobalSection
+EndGlobal
