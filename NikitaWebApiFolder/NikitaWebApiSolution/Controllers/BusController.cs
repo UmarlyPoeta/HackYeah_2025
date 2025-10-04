@@ -1,19 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace NikitaWebApiSolution.Controllers
+namespace BusTrackingApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class BusesController : ControllerBase
     {
-        // Временное хранилище данных (в реальном проекте используйте БД)
+        // Temporary data storage (use database in real project)
         private static List<Bus> _buses = new List<Bus>
         {
-            new Bus { Id = 1, LicensePlate = "А123АА777", Model = "ПАЗ-3205", Capacity = 45, BusNumber = "101", Status = BusStatus.Active, CurrentLatitude = 55.7558, CurrentLongitude = 37.6173, LastUpdate = DateTime.UtcNow },
-            new Bus { Id = 2, LicensePlate = "В456ВВ777", Model = "ЛиАЗ-5292", Capacity = 85, BusNumber = "205", Status = BusStatus.Active, CurrentLatitude = 55.7517, CurrentLongitude = 37.6178, LastUpdate = DateTime.UtcNow },
-            new Bus { Id = 3, LicensePlate = "С789СС777", Model = "МАЗ-203", Capacity = 90, BusNumber = "156", Status = BusStatus.Maintenance, CurrentLatitude = null, CurrentLongitude = null, LastUpdate = DateTime.UtcNow.AddHours(-2) }
+            new Bus {
+                Id = 1,
+                LicensePlate = "А123АА777",
+                Model = "PAZ-3205",
+                Capacity = 45,
+                BusNumber = "101",
+                Status = BusStatus.Active,
+                CurrentLatitude = 55.7558,
+                CurrentLongitude = 37.6173,
+                LastUpdate = DateTime.UtcNow
+            },
+            new Bus {
+                Id = 2,
+                LicensePlate = "В456ВВ777",
+                Model = "LiAZ-5292",
+                Capacity = 85,
+                BusNumber = "205",
+                Status = BusStatus.Active,
+                CurrentLatitude = 55.7517,
+                CurrentLongitude = 37.6178,
+                LastUpdate = DateTime.UtcNow
+            },
+            new Bus {
+                Id = 3,
+                LicensePlate = "С789СС777",
+                Model = "MAZ-203",
+                Capacity = 90,
+                BusNumber = "156",
+                Status = BusStatus.Maintenance,
+                CurrentLatitude = null,
+                CurrentLongitude = null,
+                LastUpdate = DateTime.UtcNow.AddHours(-2)
+            }
         };
         private static int _nextId = 4;
 
@@ -44,7 +73,9 @@ namespace NikitaWebApiSolution.Controllers
         public IActionResult GetActiveBuses()
         {
             var activeBuses = _buses
-                .Where(b => b.Status == BusStatus.Active && b.CurrentLatitude.HasValue && b.CurrentLongitude.HasValue)
+                .Where(b => b.Status == BusStatus.Active &&
+                           b.CurrentLatitude.HasValue &&
+                           b.CurrentLongitude.HasValue)
                 .Select(b => new BusResponse
                 {
                     Id = b.Id,
@@ -70,7 +101,7 @@ namespace NikitaWebApiSolution.Controllers
             var bus = _buses.FirstOrDefault(b => b.Id == id);
             if (bus == null)
             {
-                return NotFound(new { success = false, message = "Автобус не найден" });
+                return NotFound(new { success = false, message = "Bus not found" });
             }
 
             var result = new BusResponse
@@ -95,16 +126,24 @@ namespace NikitaWebApiSolution.Controllers
         [HttpPost]
         public IActionResult CreateBus([FromBody] CreateBusRequest request)
         {
-            // Проверка валидации модели
+            // Model validation check
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors) });
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = ModelState.Values.SelectMany(v => v.Errors)
+                });
             }
 
-            // Проверка на уникальность госномера
+            // Check for unique license plate
             if (_buses.Any(b => b.LicensePlate == request.LicensePlate))
             {
-                return BadRequest(new { success = false, message = "Автобус с таким госномером уже существует" });
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Bus with this license plate already exists"
+                });
             }
 
             var bus = new Bus
@@ -135,7 +174,8 @@ namespace NikitaWebApiSolution.Controllers
                 LastUpdate = bus.LastUpdate
             };
 
-            return CreatedAtAction(nameof(GetBus), new { id = bus.Id }, new { success = true, data = response });
+            return CreatedAtAction(nameof(GetBus), new { id = bus.Id },
+                new { success = true, data = response });
         }
 
         // PUT: api/buses/5
@@ -145,18 +185,26 @@ namespace NikitaWebApiSolution.Controllers
             var bus = _buses.FirstOrDefault(b => b.Id == id);
             if (bus == null)
             {
-                return NotFound(new { success = false, message = "Автобус не найден" });
+                return NotFound(new { success = false, message = "Bus not found" });
             }
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors) });
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = ModelState.Values.SelectMany(v => v.Errors)
+                });
             }
 
-            // Проверка на уникальность госномера (исключая текущий автобус)
+            // Check for unique license plate (excluding current bus)
             if (_buses.Any(b => b.LicensePlate == request.LicensePlate && b.Id != id))
             {
-                return BadRequest(new { success = false, message = "Автобус с таким госномером уже существует" });
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Bus with this license plate already exists"
+                });
             }
 
             bus.LicensePlate = request.LicensePlate;
@@ -190,12 +238,16 @@ namespace NikitaWebApiSolution.Controllers
             var bus = _buses.FirstOrDefault(b => b.Id == id);
             if (bus == null)
             {
-                return NotFound(new { success = false, message = "Автобус не найден" });
+                return NotFound(new { success = false, message = "Bus not found" });
             }
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors) });
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = ModelState.Values.SelectMany(v => v.Errors)
+                });
             }
 
             bus.CurrentLatitude = request.Latitude;
@@ -208,7 +260,7 @@ namespace NikitaWebApiSolution.Controllers
             return Ok(new
             {
                 success = true,
-                message = "Местоположение обновлено",
+                message = "Location updated successfully",
                 data = new
                 {
                     bus.Id,
@@ -228,18 +280,18 @@ namespace NikitaWebApiSolution.Controllers
             var bus = _buses.FirstOrDefault(b => b.Id == id);
             if (bus == null)
             {
-                return NotFound(new { success = false, message = "Автобус не найден" });
+                return NotFound(new { success = false, message = "Bus not found" });
             }
 
             if (!Enum.IsDefined(typeof(BusStatus), request.Status))
             {
-                return BadRequest(new { success = false, message = "Некорректный статус" });
+                return BadRequest(new { success = false, message = "Invalid status" });
             }
 
             bus.Status = request.Status;
             bus.LastUpdate = DateTime.UtcNow;
 
-            // Если статус не Active, сбрасываем координаты
+            // If status is not Active, reset coordinates
             if (request.Status != BusStatus.Active)
             {
                 bus.CurrentLatitude = null;
@@ -251,7 +303,7 @@ namespace NikitaWebApiSolution.Controllers
             return Ok(new
             {
                 success = true,
-                message = "Статус обновлен",
+                message = "Status updated successfully",
                 data = new
                 {
                     bus.Id,
@@ -268,16 +320,45 @@ namespace NikitaWebApiSolution.Controllers
             var bus = _buses.FirstOrDefault(b => b.Id == id);
             if (bus == null)
             {
-                return NotFound(new { success = false, message = "Автобус не найден" });
+                return NotFound(new { success = false, message = "Bus not found" });
             }
 
             _buses.Remove(bus);
 
-            return Ok(new { success = true, message = "Автобус удален" });
+            return Ok(new { success = true, message = "Bus deleted successfully" });
+        }
+
+        // GET: api/buses/search?licensePlate=ABC123
+        [HttpGet("search")]
+        public IActionResult SearchBuses([FromQuery] string licensePlate)
+        {
+            if (string.IsNullOrWhiteSpace(licensePlate))
+            {
+                return BadRequest(new { success = false, message = "License plate is required" });
+            }
+
+            var buses = _buses
+                .Where(b => b.LicensePlate.Contains(licensePlate, StringComparison.OrdinalIgnoreCase))
+                .Select(b => new BusResponse
+                {
+                    Id = b.Id,
+                    LicensePlate = b.LicensePlate,
+                    Model = b.Model,
+                    Capacity = b.Capacity,
+                    BusNumber = b.BusNumber,
+                    CurrentLatitude = b.CurrentLatitude,
+                    CurrentLongitude = b.CurrentLongitude,
+                    Speed = b.Speed,
+                    Bearing = b.Bearing,
+                    Status = b.Status.ToString(),
+                    LastUpdate = b.LastUpdate
+                }).ToList();
+
+            return Ok(new { success = true, data = buses });
         }
     }
 
-    // Модели для контроллера
+    // Data models
     public class Bus
     {
         public int Id { get; set; }
@@ -301,65 +382,65 @@ namespace NikitaWebApiSolution.Controllers
         OutOfService
     }
 
-    // DTO для запросов и ответов
+    // Request and Response DTOs
     public class CreateBusRequest
     {
-        [Required(ErrorMessage = "Госномер обязателен")]
-        [StringLength(20, ErrorMessage = "Госномер не должен превышать 20 символов")]
+        [Required(ErrorMessage = "License plate is required")]
+        [StringLength(20, ErrorMessage = "License plate cannot exceed 20 characters")]
         public string LicensePlate { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Модель обязательна")]
-        [StringLength(50, ErrorMessage = "Модель не должна превышать 50 символов")]
+        [Required(ErrorMessage = "Model is required")]
+        [StringLength(50, ErrorMessage = "Model cannot exceed 50 characters")]
         public string Model { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Вместимость обязательна")]
-        [Range(1, 200, ErrorMessage = "Вместимость должна быть от 1 до 200")]
+        [Required(ErrorMessage = "Capacity is required")]
+        [Range(1, 200, ErrorMessage = "Capacity must be between 1 and 200")]
         public int Capacity { get; set; }
 
-        [Required(ErrorMessage = "Номер автобуса обязателен")]
-        [StringLength(10, ErrorMessage = "Номер автобуса не должен превышать 10 символов")]
+        [Required(ErrorMessage = "Bus number is required")]
+        [StringLength(10, ErrorMessage = "Bus number cannot exceed 10 characters")]
         public string BusNumber { get; set; } = string.Empty;
     }
 
     public class UpdateBusRequest
     {
-        [Required(ErrorMessage = "Госномер обязателен")]
-        [StringLength(20, ErrorMessage = "Госномер не должен превышать 20 символов")]
+        [Required(ErrorMessage = "License plate is required")]
+        [StringLength(20, ErrorMessage = "License plate cannot exceed 20 characters")]
         public string LicensePlate { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Модель обязательна")]
-        [StringLength(50, ErrorMessage = "Модель не должна превышать 50 символов")]
+        [Required(ErrorMessage = "Model is required")]
+        [StringLength(50, ErrorMessage = "Model cannot exceed 50 characters")]
         public string Model { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Вместимость обязательна")]
-        [Range(1, 200, ErrorMessage = "Вместимость должна быть от 1 до 200")]
+        [Required(ErrorMessage = "Capacity is required")]
+        [Range(1, 200, ErrorMessage = "Capacity must be between 1 and 200")]
         public int Capacity { get; set; }
 
-        [Required(ErrorMessage = "Номер автобуса обязателен")]
-        [StringLength(10, ErrorMessage = "Номер автобуса не должен превышать 10 символов")]
+        [Required(ErrorMessage = "Bus number is required")]
+        [StringLength(10, ErrorMessage = "Bus number cannot exceed 10 characters")]
         public string BusNumber { get; set; } = string.Empty;
     }
 
     public class UpdateLocationRequest
     {
-        [Required(ErrorMessage = "Широта обязательна")]
-        [Range(-90, 90, ErrorMessage = "Широта должна быть между -90 и 90")]
+        [Required(ErrorMessage = "Latitude is required")]
+        [Range(-90, 90, ErrorMessage = "Latitude must be between -90 and 90")]
         public double Latitude { get; set; }
 
-        [Required(ErrorMessage = "Долгота обязательна")]
-        [Range(-180, 180, ErrorMessage = "Долгота должна быть между -180 и 180")]
+        [Required(ErrorMessage = "Longitude is required")]
+        [Range(-180, 180, ErrorMessage = "Longitude must be between -180 and 180")]
         public double Longitude { get; set; }
 
-        [Range(0, 200, ErrorMessage = "Скорость должна быть от 0 до 200 км/ч")]
+        [Range(0, 200, ErrorMessage = "Speed must be between 0 and 200 km/h")]
         public double? Speed { get; set; }
 
-        [Range(0, 360, ErrorMessage = "Направление должно быть от 0 до 360 градусов")]
+        [Range(0, 360, ErrorMessage = "Bearing must be between 0 and 360 degrees")]
         public double? Bearing { get; set; }
     }
 
     public class UpdateStatusRequest
     {
-        [Required(ErrorMessage = "Статус обязателен")]
+        [Required(ErrorMessage = "Status is required")]
         public BusStatus Status { get; set; }
     }
 
