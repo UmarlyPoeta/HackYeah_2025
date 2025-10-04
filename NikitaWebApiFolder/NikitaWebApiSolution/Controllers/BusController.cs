@@ -1,56 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 namespace BusTrackingApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class BusesController : ControllerBase
     {
-        // Temporary data storage (use database in real project)
-        private static List<Bus> _buses = new List<Bus>
+        private readonly BusDbContext _context;
+
+        public BusesController(BusDbContext context)
         {
-            new Bus {
-                Id = 1,
-                LicensePlate = "А123АА777",
-                Model = "PAZ-3205",
-                Capacity = 45,
-                BusNumber = "101",
-                Status = BusStatus.Active,
-                CurrentLatitude = 55.7558,
-                CurrentLongitude = 37.6173,
-                LastUpdate = DateTime.UtcNow
-            },
-            new Bus {
-                Id = 2,
-                LicensePlate = "В456ВВ777",
-                Model = "LiAZ-5292",
-                Capacity = 85,
-                BusNumber = "205",
-                Status = BusStatus.Active,
-                CurrentLatitude = 55.7517,
-                CurrentLongitude = 37.6178,
-                LastUpdate = DateTime.UtcNow
-            },
-            new Bus {
-                Id = 3,
-                LicensePlate = "С789СС777",
-                Model = "MAZ-203",
-                Capacity = 90,
-                BusNumber = "156",
-                Status = BusStatus.Maintenance,
-                CurrentLatitude = null,
-                CurrentLongitude = null,
-                LastUpdate = DateTime.UtcNow.AddHours(-2)
-            }
-        };
-        private static int _nextId = 4;
+            _context = context;
+        }
 
         // GET: api/buses
         [HttpGet]
-        public IActionResult GetAllBuses()
+        public async Task<IActionResult> GetAllBuses()
         {
-            var result = _buses.Select(b => new BusResponse
+            var buses = await _context.Buses.ToListAsync();
+
+            var result = buses.Select(b => new BusResponse
             {
                 Id = b.Id,
                 LicensePlate = b.LicensePlate,
@@ -70,35 +42,37 @@ namespace BusTrackingApp.Controllers
 
         // GET: api/buses/active
         [HttpGet("active")]
-        public IActionResult GetActiveBuses()
+        public async Task<IActionResult> GetActiveBuses()
         {
-            var activeBuses = _buses
+            var activeBuses = await _context.Buses
                 .Where(b => b.Status == BusStatus.Active &&
                            b.CurrentLatitude.HasValue &&
                            b.CurrentLongitude.HasValue)
-                .Select(b => new BusResponse
-                {
-                    Id = b.Id,
-                    LicensePlate = b.LicensePlate,
-                    Model = b.Model,
-                    Capacity = b.Capacity,
-                    BusNumber = b.BusNumber,
-                    CurrentLatitude = b.CurrentLatitude,
-                    CurrentLongitude = b.CurrentLongitude,
-                    Speed = b.Speed,
-                    Bearing = b.Bearing,
-                    Status = b.Status.ToString(),
-                    LastUpdate = b.LastUpdate
-                }).ToList();
+                .ToListAsync();
 
-            return Ok(new { success = true, data = activeBuses });
+            var result = activeBuses.Select(b => new BusResponse
+            {
+                Id = b.Id,
+                LicensePlate = b.LicensePlate,
+                Model = b.Model,
+                Capacity = b.Capacity,
+                BusNumber = b.BusNumber,
+                CurrentLatitude = b.CurrentLatitude,
+                CurrentLongitude = b.CurrentLongitude,
+                Speed = b.Speed,
+                Bearing = b.Bearing,
+                Status = b.Status.ToString(),
+                LastUpdate = b.LastUpdate
+            }).ToList();
+
+            return Ok(new { success = true, data = result });
         }
 
         // GET: api/buses/5
         [HttpGet("{id}")]
-        public IActionResult GetBus(int id)
+        public async Task<IActionResult> GetBus(int id)
         {
-            var bus = _buses.FirstOrDefault(b => b.Id == id);
+            var bus = await _context.Buses.FindAsync(id);
             if (bus == null)
             {
                 return NotFound(new { success = false, message = "Bus not found" });
@@ -124,9 +98,8 @@ namespace BusTrackingApp.Controllers
 
         // POST: api/buses
         [HttpPost]
-        public IActionResult CreateBus([FromBody] CreateBusRequest request)
+        public async Task<IActionResult> CreateBus([FromBody] CreateBusRequest request)
         {
-            // Model validation check
             if (!ModelState.IsValid)
             {
                 return BadRequest(new
@@ -137,7 +110,7 @@ namespace BusTrackingApp.Controllers
             }
 
             // Check for unique license plate
-            if (_buses.Any(b => b.LicensePlate == request.LicensePlate))
+            if (await _context.Buses.AnyAsync(b => b.LicensePlate == request.LicensePlate))
             {
                 return BadRequest(new
                 {
@@ -148,7 +121,6 @@ namespace BusTrackingApp.Controllers
 
             var bus = new Bus
             {
-                Id = _nextId++,
                 LicensePlate = request.LicensePlate,
                 Model = request.Model,
                 Capacity = request.Capacity,
@@ -157,7 +129,8 @@ namespace BusTrackingApp.Controllers
                 LastUpdate = DateTime.UtcNow
             };
 
-            _buses.Add(bus);
+            _context.Buses.Add(bus);
+            await _context.SaveChangesAsync();
 
             var response = new BusResponse
             {
@@ -180,14 +153,8 @@ namespace BusTrackingApp.Controllers
 
         // PUT: api/buses/5
         [HttpPut("{id}")]
-        public IActionResult UpdateBus(int id, [FromBody] UpdateBusRequest request)
+        public async Task<IActionResult> UpdateBus(int id, [FromBody] UpdateBusRequest request)
         {
-            var bus = _buses.FirstOrDefault(b => b.Id == id);
-            if (bus == null)
-            {
-                return NotFound(new { success = false, message = "Bus not found" });
-            }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(new
@@ -197,8 +164,14 @@ namespace BusTrackingApp.Controllers
                 });
             }
 
+            var bus = await _context.Buses.FindAsync(id);
+            if (bus == null)
+            {
+                return NotFound(new { success = false, message = "Bus not found" });
+            }
+
             // Check for unique license plate (excluding current bus)
-            if (_buses.Any(b => b.LicensePlate == request.LicensePlate && b.Id != id))
+            if (await _context.Buses.AnyAsync(b => b.LicensePlate == request.LicensePlate && b.Id != id))
             {
                 return BadRequest(new
                 {
@@ -212,6 +185,8 @@ namespace BusTrackingApp.Controllers
             bus.Capacity = request.Capacity;
             bus.BusNumber = request.BusNumber;
             bus.LastUpdate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
 
             var response = new BusResponse
             {
@@ -233,14 +208,8 @@ namespace BusTrackingApp.Controllers
 
         // PUT: api/buses/5/location
         [HttpPut("{id}/location")]
-        public IActionResult UpdateBusLocation(int id, [FromBody] UpdateLocationRequest request)
+        public async Task<IActionResult> UpdateBusLocation(int id, [FromBody] UpdateLocationRequest request)
         {
-            var bus = _buses.FirstOrDefault(b => b.Id == id);
-            if (bus == null)
-            {
-                return NotFound(new { success = false, message = "Bus not found" });
-            }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(new
@@ -250,12 +219,20 @@ namespace BusTrackingApp.Controllers
                 });
             }
 
+            var bus = await _context.Buses.FindAsync(id);
+            if (bus == null)
+            {
+                return NotFound(new { success = false, message = "Bus not found" });
+            }
+
             bus.CurrentLatitude = request.Latitude;
             bus.CurrentLongitude = request.Longitude;
             bus.Speed = request.Speed;
             bus.Bearing = request.Bearing;
             bus.Status = BusStatus.Active;
             bus.LastUpdate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
 
             return Ok(new
             {
@@ -275,9 +252,9 @@ namespace BusTrackingApp.Controllers
 
         // PUT: api/buses/5/status
         [HttpPut("{id}/status")]
-        public IActionResult UpdateBusStatus(int id, [FromBody] UpdateStatusRequest request)
+        public async Task<IActionResult> UpdateBusStatus(int id, [FromBody] UpdateStatusRequest request)
         {
-            var bus = _buses.FirstOrDefault(b => b.Id == id);
+            var bus = await _context.Buses.FindAsync(id);
             if (bus == null)
             {
                 return NotFound(new { success = false, message = "Bus not found" });
@@ -300,6 +277,8 @@ namespace BusTrackingApp.Controllers
                 bus.Bearing = null;
             }
 
+            await _context.SaveChangesAsync();
+
             return Ok(new
             {
                 success = true,
@@ -315,46 +294,49 @@ namespace BusTrackingApp.Controllers
 
         // DELETE: api/buses/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteBus(int id)
+        public async Task<IActionResult> DeleteBus(int id)
         {
-            var bus = _buses.FirstOrDefault(b => b.Id == id);
+            var bus = await _context.Buses.FindAsync(id);
             if (bus == null)
             {
                 return NotFound(new { success = false, message = "Bus not found" });
             }
 
-            _buses.Remove(bus);
+            _context.Buses.Remove(bus);
+            await _context.SaveChangesAsync();
 
             return Ok(new { success = true, message = "Bus deleted successfully" });
         }
 
         // GET: api/buses/search?licensePlate=ABC123
         [HttpGet("search")]
-        public IActionResult SearchBuses([FromQuery] string licensePlate)
+        public async Task<IActionResult> SearchBuses([FromQuery] string licensePlate)
         {
             if (string.IsNullOrWhiteSpace(licensePlate))
             {
                 return BadRequest(new { success = false, message = "License plate is required" });
             }
 
-            var buses = _buses
-                .Where(b => b.LicensePlate.Contains(licensePlate, StringComparison.OrdinalIgnoreCase))
-                .Select(b => new BusResponse
-                {
-                    Id = b.Id,
-                    LicensePlate = b.LicensePlate,
-                    Model = b.Model,
-                    Capacity = b.Capacity,
-                    BusNumber = b.BusNumber,
-                    CurrentLatitude = b.CurrentLatitude,
-                    CurrentLongitude = b.CurrentLongitude,
-                    Speed = b.Speed,
-                    Bearing = b.Bearing,
-                    Status = b.Status.ToString(),
-                    LastUpdate = b.LastUpdate
-                }).ToList();
+            var buses = await _context.Buses
+                .Where(b => b.LicensePlate.Contains(licensePlate))
+                .ToListAsync();
 
-            return Ok(new { success = true, data = buses });
+            var result = buses.Select(b => new BusResponse
+            {
+                Id = b.Id,
+                LicensePlate = b.LicensePlate,
+                Model = b.Model,
+                Capacity = b.Capacity,
+                BusNumber = b.BusNumber,
+                CurrentLatitude = b.CurrentLatitude,
+                CurrentLongitude = b.CurrentLongitude,
+                Speed = b.Speed,
+                Bearing = b.Bearing,
+                Status = b.Status.ToString(),
+                LastUpdate = b.LastUpdate
+            }).ToList();
+
+            return Ok(new { success = true, data = result });
         }
     }
 
@@ -362,24 +344,107 @@ namespace BusTrackingApp.Controllers
     public class Bus
     {
         public int Id { get; set; }
+
+        [Required]
+        [StringLength(20)]
         public string LicensePlate { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(50)]
         public string Model { get; set; } = string.Empty;
+
+        [Required]
+        [Range(1, 200)]
         public int Capacity { get; set; }
+
+        [Required]
+        [StringLength(10)]
         public string BusNumber { get; set; } = string.Empty;
+
         public double? CurrentLatitude { get; set; }
         public double? CurrentLongitude { get; set; }
         public double? Speed { get; set; }
         public double? Bearing { get; set; }
+
+        [Required]
         public BusStatus Status { get; set; }
+
+        [Required]
         public DateTime LastUpdate { get; set; }
     }
 
     public enum BusStatus
     {
-        Active,
-        Inactive,
-        Maintenance,
-        OutOfService
+        Active = 0,
+        Inactive = 1,
+        Maintenance = 2,
+        OutOfService = 3
+    }
+    public class BusDbContext : DbContext
+    {
+        public DbSet<Bus> Buses { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source=bustracking.db");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Bus>()
+                .HasIndex(b => b.LicensePlate)
+                .IsUnique();
+
+            modelBuilder.Entity<Bus>()
+                .Property(b => b.Status)
+                .HasConversion<int>();
+
+            // Seed data
+            modelBuilder.Entity<Bus>().HasData(
+                new Bus
+                {
+                    Id = 1,
+                    LicensePlate = "А123АА777",
+                    Model = "PAZ-3205",
+                    Capacity = 45,
+                    BusNumber = "101",
+                    CurrentLatitude = 55.7558,
+                    CurrentLongitude = 37.6173,
+                    Speed = null,
+                    Bearing = null,
+                    Status = BusStatus.Active,
+                    LastUpdate = DateTime.UtcNow
+                },
+                new Bus
+                {
+                    Id = 2,
+                    LicensePlate = "В456ВВ777",
+                    Model = "LiAZ-5292",
+                    Capacity = 85,
+                    BusNumber = "205",
+                    CurrentLatitude = 55.7517,
+                    CurrentLongitude = 37.6178,
+                    Speed = null,
+                    Bearing = null,
+                    Status = BusStatus.Active,
+                    LastUpdate = DateTime.UtcNow
+                },
+                new Bus
+                {
+                    Id = 3,
+                    LicensePlate = "С789СС777",
+                    Model = "MAZ-203",
+                    Capacity = 90,
+                    BusNumber = "156",
+                    CurrentLatitude = null,
+                    CurrentLongitude = null,
+                    Speed = null,
+                    Bearing = null,
+                    Status = BusStatus.Maintenance,
+                    LastUpdate = DateTime.UtcNow.AddHours(-2)
+                }
+            );
+        }
     }
 
     // Request and Response DTOs
