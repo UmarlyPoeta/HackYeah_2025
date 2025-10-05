@@ -1,21 +1,43 @@
+    
+:root {
+    --color-background: #f7f7f7;
+    --color-primary: #fff;
+    --color-secondary: #38cf47;
+    --color-hover: #1f7c2b;
+    --color-text: #101010;
+    --color-text-secondary: #fff;
+    --color-grey: #aaaaaa;
+}
     body {
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(
-                180deg,
-                #3ecf4a 0%,
-                #3ecf4a 33%,
-                rgba(62, 207, 74, 0.2) 60%,
-                #fff 100%
-            );
+        display: flex;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(
+        180deg,
+        #3ecf4a 0%,
+        #3ecf4a 33%,
+        rgba(62, 207, 74, 0.2) 60%,
+        #fff 100%
+    );
+    min-height: 100vh;
+    overflow-x: hidden;
+    box-shadow: 0 0 120px 40px #3ecf4a55 inset;
+    padding-top: 70px; /* space for fixed navbar */
             /* Zielona poświata */
+            justify-content: center;
             box-shadow: 0 0 120px 40px #3ecf4a55 inset;
         }
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 32px 16px 16px 16px;
+            background-color: var(--color-background);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        align-content: center;
+        max-width: 600px;
+        width: 80%;
+        z-index: 0;
         }
         .station-name {
             font-size: 2.2rem;
@@ -113,9 +135,93 @@
             font-weight: bold;
             color: #222;
         }
-        @media (max-width: 700px) {
+        @media (max-width: 600px) {
             .tiles {
                 flex-direction: column;
                 gap: 16px;
             }
         }
+
+.top-bar {
+    background-color: var(--color-background); /* #f7f7f7 - light gray 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;*/
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    position: fixed;
+    display: flex;                  /* horizontal layout */
+    align-items: center;            /* vertically center items */
+    gap: 15px;                      /* space between username and menu */
+    padding: 10px 20px;             /* nice spacing inside bar */
+    z-index: 1000;
+    justify-content: flex-start;    /* keep everything on the left */
+}
+.user-name {
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 36px; /* match approx height of dropbtn */
+}
+
+
+.status-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+}
+
+.dropdown { 
+   position: absolute;
+   right: 0; 
+   margin: 5px;
+}
+
+.dropbtn {
+    background-color: var(--color-secondary);
+    color: white;
+    padding: 8px 18px;
+    font-size: 16px;
+    line-height: 36px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%; /* appear below the button */
+  right: 0;   /* align under button, not right corner */
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  z-index: 999;
+}
+
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: var(--color-hover);
+}
+
+/* .tile.dropdown-tile {
+    min-height: 180px; /* adjust as needed */
+/* } */ 
