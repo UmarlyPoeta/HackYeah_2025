@@ -210,3 +210,7 @@
 .dropdown:hover .dropbtn {
     background-color: var(--color-hover);
 }
+
+/* .tile.dropdown-tile {
+    min-height: 180px; /* adjust as needed */
+/* } */ 

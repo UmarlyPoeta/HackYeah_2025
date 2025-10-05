@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Statystyki linii</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style_bus_station.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .form-row {
+            margin-bottom: 15px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+        
+        .tile.dropdown-tile {
+            min-height: 180px; /* Reduced height for dropdown tile */
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="user-name">Welcome, User</div>
+        <div class="dropdown">
+            <button class="dropbtn">Menu &#9662;</button>
+            <div class="dropdown-content">
+                <a href="main_page.html">Main Page</a>
+                <a href="#">Kontakt</a>
+                <a href="profile.html">Profil użytkownika</a>
+                <a href="login.html">Wyloguj</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="station-name" id="stationName">Linia 207</div>
+        <div class="tiles">
+            <div class="tile dropdown-tile">
+                <h2>Wybierz dzień tygodnia</h2>
+                <div class="form-row">
+                    <div class="form-input">
+                        <select id="daySelector">
+                            <option value="">Wybierz dzień tygodnia</option>
+                            <option value="pon">Poniedziałek</option>
+                            <option value="wt">Wtorek</option>
+                            <option value="sr">Środa</option>
+                            <option value="cz">Czwartek</option>
+                            <option value="pt">Piątek</option>
+                            <option value="sb">Sobota</option>
+                            <option value="nd">Niedziela</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="tile">
+                <h2>Typowe opóźnienie linii (minuty)</h2>
+                <div class="chart-container">
+                    <canvas id="delayChart"></canvas>
+                </div>
+            </div>
+            <div class="tile">
+                <h2>Typowa ogólna jakość (%)</h2>
+                <div class="chart-container">
+                    <canvas id="qualityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to determine if an hour is a peak hour
+        function isPeakHour(hour) {
+            // Peak hours: 7-9 AM and 4-6 PM
+            return (hour >= 7 && hour <= 9) || (hour >= 16 && hour <= 18);
+        }
+
+        // Function to get color based on hour and value
+        function getColor(hour, value, isQuality = false) {
+            if (isQuality) {
+                // For quality chart: green for high values, red for low values
+                return value >= 80 ? '#38cf47' : 
+                       value >= 60 ? '#ffa726' : 
+                       value >= 40 ? '#ff7043' : '#f44336';
+            } else {
+                // For delay chart: green for low delays, red for high delays
+                if (isPeakHour(hour)) {
+                    return value >= 15 ? '#f44336' : 
+                           value >= 10 ? '#ff7043' : 
+                           value >= 5 ? '#ffa726' : '#38cf47';
+                } else {
+                    return value >= 5 ? '#ffa726' : '#38cf47';
+                }
+            }
+        }
+
+        // Data for each day of the week
+        const dayData = {
+            'pon': {
+                delays: [1, 1, 1, 1, 1, 2, 5, 15, 20, 18, 2, 1, 1, 1, 1, 2, 5, 18, 20, 15, 2, 1, 1, 1],
+                quality: [95, 95, 95, 95, 90, 80, 50, 25, 20, 30, 85, 95, 95, 95, 90, 80, 50, 25, 20, 30, 85, 95, 95, 95]
+            },
+            'wt': {
+                delays: [1, 1, 1, 1, 1, 2, 6, 16, 20, 17, 2, 1, 1, 1, 1, 2, 6, 17, 20, 16, 2, 1, 1, 1],
+                quality: [96, 96, 96, 96, 91, 81, 51, 26, 20, 31, 86, 96, 96, 96, 91, 81, 51, 26, 20, 31, 86, 96, 96, 96]
+            },
+            'sr': {
+                delays: [1, 1, 1, 1, 1, 2, 4, 14, 20, 19, 2, 1, 1, 1, 1, 2, 4, 19, 20, 14, 2, 1, 1, 1],
+                quality: [94, 94, 94, 94, 89, 79, 49, 24, 20, 29, 84, 94, 94, 94, 89, 79, 49, 24, 20, 29, 84, 94, 94, 94]
+            },
+            'cz': {
+                delays: [1, 1, 1, 1, 1, 2, 7, 17, 20, 16, 2, 1, 1, 1, 1, 2, 7, 16, 20, 17, 2, 1, 1, 1],
+                quality: [93, 93, 93, 93, 88, 78, 48, 23, 20, 28, 83, 93, 93, 93, 88, 78, 48, 23, 20, 28, 83, 93, 93, 93]
+            },
+            'pt': {
+                delays: [1, 1, 1, 1, 1, 2, 8, 18, 20, 15, 2, 1, 1, 1, 1, 2, 8, 15, 20, 18, 2, 1, 1, 1],
+                quality: [92, 92, 92, 92, 87, 77, 47, 22, 20, 27, 82, 92, 92, 92, 87, 77, 47, 22, 20, 27, 82, 92, 92, 92]
+            },
+            'sb': {
+                delays: [1, 1, 1, 1, 1, 1, 2, 3, 4, 3, 2, 1, 1, 1, 1, 1, 2, 3, 4, 3, 2, 1, 1, 1],
+                quality: [98, 98, 98, 98, 97, 96, 95, 94, 93, 94, 96, 98, 98, 98, 97, 96, 95, 94, 93, 94, 96, 98, 98, 98]
+            },
+            'nd': {
+                delays: [1, 1, 1, 1, 1, 1, 1, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1, 2, 3, 2, 1, 1, 1, 1],
+                quality: [99, 99, 99, 99, 98, 97, 96, 95, 94, 95, 97, 99, 99, 99, 98, 97, 96, 95, 94, 95, 97, 99, 99, 99]
+            }
+        };
+
+        // Chart instances
+        let delayChart = null;
+        let qualityChart = null;
+
+        // Initialize charts
+        function initCharts() {
+            const ctxDelay = document.getElementById('delayChart').getContext('2d');
+            const ctxQuality = document.getElementById('qualityChart').getContext('2d');
+            
+            // Create initial empty charts
+            delayChart = new Chart(ctxDelay, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                    datasets: [{
+                        label: 'Opóźnienie (min)',
+                        data: [],
+                        backgroundColor: [],
+                        borderWidth: 0,
+                        borderRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Minuty'
+                            },
+                            max: 25
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            qualityChart = new Chart(ctxQuality, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                    datasets: [{
+                        label: 'Jakość (%)',
+                        data: [],
+                        backgroundColor: [],
+                        borderWidth: 0,
+                        borderRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Procent'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update charts based on selected day
+        function updateCharts(day) {
+            if (!dayData[day]) return;
+            
+            const data = dayData[day];
+            
+            // Update delay chart with colors
+            delayChart.data.datasets[0].data = data.delays;
+            delayChart.data.datasets[0].backgroundColor = data.delays.map((value, index) => 
+                getColor(index, value, false)
+            );
+            delayChart.update();
+            
+            // Update quality chart with colors
+            qualityChart.data.datasets[0].data = data.quality;
+            qualityChart.data.datasets[0].backgroundColor = data.quality.map((value, index) => 
+                getColor(index, value, true)
+            );
+            qualityChart.update();
+        }
+
+        // Event listener for day selector
+        document.getElementById('daySelector').addEventListener('change', function() {
+            const selectedDay = this.value;
+            updateCharts(selectedDay);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            
+            // Auto-select Monday on load for demo purposes
+            document.getElementById('daySelector').value = 'pon';
+            updateCharts('pon');
+        });
+    </script>
+</body>
+</html>
