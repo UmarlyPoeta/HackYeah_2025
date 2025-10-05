@@ -20,19 +20,57 @@
 
 <div id="map"></div>
 
+<!--<script>-->
+<!--    var map = L.map('map').setView([50.06, 19.99], 13);-->
+
+<!--    // https://tile.openstreetmap.org/{z}/{x}/{y}.png-->
+<!--    L.tileLayer('https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=72e4e00a51284f12b41037c8f2a2cfb4', {-->
+<!--        maxZoom: 19,-->
+<!--        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'-->
+<!--    }).addTo(map);-->
+
+<!--    // example marker-->
+<!--    var marker1 = L.marker([50.067742, 19.991555]).addTo(map);-->
+<!--    marker1.bindPopup('HackYeah');-->
+<!--    marker1.openPopup();-->
+<!--</script>-->
 <script>
     var map = L.map('map').setView([50.06, 19.99], 13);
 
-    // https://tile.openstreetmap.org/{z}/{x}/{y}.png
     L.tileLayer('https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=72e4e00a51284f12b41037c8f2a2cfb4', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    // example marker
-    var marker1 = L.marker([50.067742, 19.991555]).addTo(map);
-    marker1.bindPopup('HackYeah');
-    marker1.openPopup();
+    var busIcon = L.icon({
+        iconUrl: 'dist/images/busIconTEST2.png',
+        iconSize: [32, 37],
+        popupAnchor: [0, -15]
+    });
+
+    var marker1 = L.marker([50.068882, 19.988015], {icon: busIcon}).addTo(map);
+    marker1.bindPopup(
+        '<b>Line number:</b> 704<br>' +
+        '<b>Delay:</b> <span style="color:red; font-weight:bold;">2min</span><br>' +
+        '<b>Reliability rate: </b> 60%<br>' +
+        '<b>Is crowded? </b> 🔴'
+    );
+
+    var positions = [
+        [50.068882, 19.988015],
+        [50.069357, 19.987301],
+        [50.0703, 19.985536],
+        [50.071023, 19.984131]
+    ];
+
+    var index = 0;
+
+    // Co 3 sekundy zmieniamy pozycję markera
+    setInterval(function() {
+        index = (index + 1) % positions.length; // cykl po tablicy
+        marker1.setLatLng(positions[index]);
+    }, 3000);
 </script>
+
 </body>
 </html>
