@@ -24,9 +24,37 @@
     <div class="mobile-form">
         <img class="logo" src="ShareStop.png" alt="Logo">
         <h1>Journey Radar</h1>
-        <input class="login-input" id="login-name" type="text" placeholder="Name">
-        <input class="login-input" id="login-password" type="password" placeholder="Password">
-        <button class="login-button">Login</button>
+
+        <!-- Error message display -->
+        <div id="error-message" style="color: red; display: none; margin-bottom: 10px;">
+            Invalid username or password. Please try again.
+        </div>
+
+        <!-- Logout message display -->
+        <div id="logout-message" style="color: green; display: none; margin-bottom: 10px;">
+            You have been logged out successfully.
+        </div>
+
+        <form action="/login" method="post">
+            <input class="login-input" name="username" type="text" placeholder="Username" required>
+            <input class="login-input" name="password" type="password" placeholder="Password" required>
+            <button class="login-button" type="submit">Login</button>
+        </form>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="register.html" style="color: #007bff; text-decoration: none;">Don't have an account? Register here</a>
+        </div>
     </div>
+
+    <script>
+        // Display error message if login failed
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error') === 'true') {
+            document.getElementById('error-message').style.display = 'block';
+        }
+        if (urlParams.get('logout') === 'true') {
+            document.getElementById('logout-message').style.display = 'block';
+        }
+    </script>
 </body>
 </html>

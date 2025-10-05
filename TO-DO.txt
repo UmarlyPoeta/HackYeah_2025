@@ -1,0 +1,9 @@
+- naprawienie auth(pomajstrowanie przy plikach
+ Authcontroller.java, configsecurity.java i login.html)
+- zrobienie żeby dynamicznie przez js fetchował użytkownik
+ z api nikity statystyki
+- Prezentacja (Target, Model biznesowy(to jakie dane zbieramy i
+ do czego mogą się przydać), Funkcjonalności i naszę rozwiązania)
+- Zrobienie prostego web crawlera do stronek z powiadomieniami
+ o usterkach w busach itd. i dodanie do bus_station jako important
+- Diagramy jak u nas wygląda logika itd.

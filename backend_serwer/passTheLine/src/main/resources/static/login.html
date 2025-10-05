@@ -1,33 +1,11 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/images/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
     <link rel="stylesheet" href="/css/style.css">
-    <script>
-        document.querySelector(".login-button").addEventListener("click", async () => {
-            const username = document.getElementById("login-name").value;
-            const password = document.getElementById("login-password").value;
-
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password })
-            });
-
-            const result = await response.text();
-            if (result === "success") {
-                alert("Zalogowano!");
-                window.location.href = "/main_page.html";
-            } else {
-                alert("Niepoprawne dane logowania");
-            }
-        });
-
-    </script>
 </head>
 <body>
     <div class="top-bar">
@@ -45,9 +23,23 @@
     <div class="mobile-form">
         <img class="logo" src="ShareStop.png" alt="Logo">
         <h1>Journey Radar</h1>
-        <input class="login-input" id="login-name" type="text" placeholder="Name">
-        <input class="login-input" id="login-password" type="password" placeholder="Password">
-        <button class="login-button">Login</button>
+        <form action="/login" method="post">
+            <input class="login-input" name="username" type="text" placeholder="Username" required>
+            <input class="login-input" name="password" type="password" placeholder="Password" required>
+            <button class="login-button" type="submit">Login</button>
+        </form>
+        <p><a href="/register.html">Register</a></p>
+        <div id="error-message" style="color: red;"></div>
+        <div id="logout-message" style="color: green;"></div>
     </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error')) {
+            document.getElementById('error-message').textContent = 'Invalid username or password';
+        }
+        if (urlParams.get('logout')) {
+            document.getElementById('logout-message').textContent = 'You have been logged out';
+        }
+    </script>
 </body>
 </html>

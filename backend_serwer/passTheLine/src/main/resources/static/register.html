@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/images/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Journey Radar</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="user-name">Welcome, Guest</div>
+        <div class="dropdown">
+            <button class="dropbtn">Menu &#9662;</button>
+            <div class="dropdown-content">
+                <a href="main_page.html">Main Page</a>
+                <a href="#">Kontakt</a>
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-form">
+        <img class="logo" src="/imgs/ShareStop.png" alt="Logo">
+        <h1>Journey Radar</h1>
+        <h2>Register</h2>
+
+        <!-- Success message display -->
+        <div id="success-message" style="color: green; display: none; margin-bottom: 10px;">
+            Registration successful! Please login.
+        </div>
+
+        <!-- Error message display -->
+        <div id="error-message" style="color: red; display: none; margin-bottom: 10px;">
+            Registration failed. Please try again.
+        </div>
+
+        <form id="register-form">
+            <input class="login-input" id="username" type="text" placeholder="Username" required>
+            <input class="login-input" id="password" type="password" placeholder="Password" required>
+            <button class="login-button" type="submit">Register</button>
+        </form>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="login.html" style="color: #007bff; text-decoration: none;">Already have an account? Login here</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                if (response.ok) {
+                    document.getElementById('success-message').style.display = 'block';
+                    document.getElementById('error-message').style.display = 'none';
+                    // Redirect to login after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    document.getElementById('error-message').style.display = 'block';
+                    document.getElementById('success-message').style.display = 'none';
+                }
+            } catch (error) {
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('success-message').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
