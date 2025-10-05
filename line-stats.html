@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Statystyki linii</title>
+    <title>Line Statistics</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style_bus_station.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -38,40 +38,40 @@
             <button class="dropbtn">Menu &#9662;</button>
             <div class="dropdown-content">
                 <a href="main_page.html">Main Page</a>
-                <a href="#">Kontakt</a>
-                <a href="profile.html">Profil użytkownika</a>
-                <a href="login.html">Wyloguj</a>
+                <a href="#">Contact</a>
+                <a href="profile.html">User Profile</a>
+                <a href="login.html">Logout</a>
             </div>
         </div>
     </div>
     <div class="container">
-        <div class="station-name" id="stationName">Linia 207</div>
+        <div class="station-name" id="stationName">Line 207</div>
         <div class="tiles">
             <div class="tile dropdown-tile">
-                <h2>Wybierz dzień tygodnia</h2>
+                <h2>Select day of the week</h2>
                 <div class="form-row">
                     <div class="form-input">
                         <select id="daySelector">
-                            <option value="">Wybierz dzień tygodnia</option>
-                            <option value="pon">Poniedziałek</option>
-                            <option value="wt">Wtorek</option>
-                            <option value="sr">Środa</option>
-                            <option value="cz">Czwartek</option>
-                            <option value="pt">Piątek</option>
-                            <option value="sb">Sobota</option>
-                            <option value="nd">Niedziela</option>
+                            <option value="">Select day of the week</option>
+                            <option value="pon">Monday</option>
+                            <option value="wt">Tuesday</option>
+                            <option value="sr">Wednesday</option>
+                            <option value="cz">Thursday</option>
+                            <option value="pt">Friday</option>
+                            <option value="sb">Saturday</option>
+                            <option value="nd">Sunday</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="tile">
-                <h2>Typowe opóźnienie linii (minuty)</h2>
+                <h2>Typical line delay (minutes)</h2>
                 <div class="chart-container">
                     <canvas id="delayChart"></canvas>
                 </div>
             </div>
             <div class="tile">
-                <h2>Typowa ogólna jakość (%)</h2>
+                <h2>Typical overall quality (%)</h2>
                 <div class="chart-container">
                     <canvas id="qualityChart"></canvas>
                 </div>
@@ -152,7 +152,7 @@
                 data: {
                     labels: Array.from({length: 24}, (_, i) => `${i}:00`),
                     datasets: [{
-                        label: 'Opóźnienie (min)',
+                        label: 'Delay (min)',
                         data: [],
                         backgroundColor: [],
                         borderWidth: 0,
@@ -167,7 +167,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Minuty'
+                                text: 'Minutes'
                             },
                             max: 25
                         }
@@ -185,7 +185,7 @@
                 data: {
                     labels: Array.from({length: 24}, (_, i) => `${i}:00`),
                     datasets: [{
-                        label: 'Jakość (%)',
+                        label: 'Quality (%)',
                         data: [],
                         backgroundColor: [],
                         borderWidth: 0,
@@ -201,7 +201,7 @@
                             max: 100,
                             title: {
                                 display: true,
-                                text: 'Procent'
+                                text: 'Percent'
                             }
                         }
                     },
