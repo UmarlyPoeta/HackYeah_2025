@@ -57,7 +57,7 @@ background-color: var(--color-background);
     top: 0;
     z-index: 100;
     width: 100%;
-    position: absolute;
+    position: fixed;
     display: flex;                  /* horizontal layout */
     align-items: center;            /* vertically center items */
     gap: 15px;                      /* space between username and menu */
@@ -343,4 +343,9 @@ background-color: var(--color-background);
 
 .dropdown:hover .dropbtn {
     background-color: var(--color-hover);
+}
+
+.logo {
+    max-width: 250px;
+    max-height: 250px;
 }
