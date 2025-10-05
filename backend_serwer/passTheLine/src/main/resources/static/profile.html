@@ -4,19 +4,31 @@
     <meta charset="UTF-8">
     <title>Profil użytkownika</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style_profile.css">
+    <link rel="stylesheet" href="style_profile.css">
 </head>
 <body>
+    <div class="top-bar">
+        <div class="user-name">Welcome, User</div>
+        <div class="dropdown">
+            <button class="dropbtn">Menu &#9662;</button>
+            <div class="dropdown-content">
+                <a href="main_page.html">Main Page</a>
+                <a href="#">Kontakt</a>
+                <a href="profile.html">Profil użytkownika</a>
+                <a href="login.html">Wyloguj</a>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="avatar">
-            <img src="/profile-example-avatar.png" alt="Avatar użytkownika">
+            <img src="profile-example-avatar.png" alt="Avatar użytkownika">
         </div>
         <div class="welcome">
-            Witaj <span id="username">JanKowalski</span>
+            Witaj <span id="username">Jan Kowalski</span>
         </div>
         <div class="tiles">
             <div class="tile">
-                <div class="points" id="points">1230</div>
+                <div class="points" id="points"><span onclick="window.location.href='prizes.html'" style="cursor: pointer;">1340</span></div>
                 <div class="points-label">Twoje punkty</div>
             </div>
             <div class="tile">

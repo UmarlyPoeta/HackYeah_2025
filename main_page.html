@@ -8,29 +8,34 @@
     <link rel="stylesheet" href="style.css">
 
 </head>
-<body>
-    <div class="login-form">
+<body>   
+    <div class="top-bar">
+        <div class="user-name">Welcome, User</div>
         <div class="dropdown">
             <button class="dropbtn">Menu &#9662;</button>
             <div class="dropdown-content">
-                <a href="#">Main Page</a>
+                <a href="main_page.html">Main Page</a>
                 <a href="#">Kontakt</a>
-                <a href="#">Profil użytkownika</a>
-                <a href="#">Wyloguj</a>
+                <a href="profile.html">Profil użytkownika</a>
+                <a href="login.html">Wyloguj</a>
             </div>
         </div>
-        <img src="" alt="Logo">
-        <h1>NAZWA APKI</h1>
+    </div>
+    <div class="mobile-form">
+     
+        <img class="logo" src="ShareStop.png" alt="Logo">
+        <h1>Journey Radar</h1>
         <div id="select">
-            <button id="station-select">BUS STATION</button>
-            <button id="line-select">LINE</button>
+            <input type="text" id="station-select" placeholder="BUS STATION"></input>
+            <a href="bus_station.html"><button>Search</button></a>
+            <!--<input type="text" id="line-select">LINE</input>--->
         </div>
-        <img src="" alt="Logo">
+        <iframe src="mapa.html"></iframe>
         <div id="tile-buttons">
-            <button id="tile-button1">tile-button</button>
+            <a href="line-list.html"><button id="tile-button1">Line List</button></a>
             <button id="tile-button2">tile-button</button>
             <button id="tile-button3">tile-button</button>
-            <button id="tile-button4">tile-button</button>
+            <a href="report-page.html"><button id="tile-button4">Report Page</button></a>
         </div>
     </div>
 </body>

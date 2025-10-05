@@ -8,6 +8,18 @@
 
 </head>
 <body>
+    <div class="top-bar">
+        <div class="user-name">Welcome, User</div>
+        <div class="dropdown">
+            <button class="dropbtn">Menu &#9662;</button>
+            <div class="dropdown-content">
+                <a href="main_page.html">Main Page</a>
+                <a href="#">Kontakt</a>
+                <a href="profile.html">Profil użytkownika</a>
+                <a href="login.html">Wyloguj</a>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="station-name" id="stationName">Dworzec Główny</div>
 
@@ -16,18 +28,27 @@
             <div class="tile">
                 <h2>Opóźnienia linii</h2>
                 <ul class="delays-list" id="delaysList">
-                    <!-- Przykładowe dane -->
-                    <li><span>105</span> <span>+3 min</span></li>
-                    <li><span>142</span> <span>+1 min</span></li>
-                    <li><span>207</span> <span>+7 min</span></li>
+                    <li>
+                        <span onclick="window.location.href='/line-stats.html'" style="cursor: pointer;">105</span>
+                        <span>+3 min</span>
+                    </li>
+                    <li>
+                        <span onclick="window.location.href='/line-stats.html'" style="cursor: pointer;">142</span>
+                        <span>+1 min</span>
+                    </li>
+                    <li>
+                        <span onclick="window.location.href='/line-stats.html'" style="cursor: pointer;">207</span>
+                        <span>+7 min</span>
+                    </li>
                 </ul>
+
+
             </div>
             <!-- Kafelek mapa -->
             <div class="tile">
                 <h2>Mapa przystanku</h2>
                 <div class="map-placeholder" id="mapPlaceholder">
-                    <!-- Tu można wstawić mapę, np. iframe z OpenStreetMap -->
-                    <span>Mapa wczytuje się...</span>
+                    <iframe src="/mapa.html"></iframe>
                 </div>
             </div>
         </div>

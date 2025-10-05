@@ -185,7 +185,7 @@ external.api.base-url=http://192.168.137.1:5041
 Możesz zmienić adres API w pliku konfiguracyjnym jeśli jest inny. Na przykład:
 
 ```properties
-external.api.base-url=http://localhost:5041
+#external.api.base-url=http://localhost:5041
 # lub
 external.api.base-url=http://192.168.1.100:5041
 ```

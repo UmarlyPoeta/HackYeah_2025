@@ -7,16 +7,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
-    <div class="login-form">
-        <img src="" alt="Logo">
-        <h1>NAZWA APKI</h1>
+    <div class="top-bar">
+        <div class="user-name">Welcome, User</div>
+        <div class="dropdown">
+            <button class="dropbtn">Menu &#9662;</button>
+            <div class="dropdown-content">
+                <a href="main_page.html">Main Page</a>
+                <a href="#">Kontakt</a>
+                <a href="profile.html">Profil użytkownika</a>
+                <a href="login.html">Wyloguj</a>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-form">
+        <img class="logo" src="ShareStop.png" alt="Logo">
+        <h1>Journey Radar</h1>
         <input class="login-input" id="login-name" type="text" placeholder="Name">
         <input class="login-input" id="login-password" type="password" placeholder="Password">
         <button class="login-button">Login</button>
     </div>
-    <script type="module" src="index.js"></script>
 </body>
 </html>
