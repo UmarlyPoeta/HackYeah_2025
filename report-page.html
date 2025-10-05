@@ -1,105 +1,103 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zgłoś problem</title>
+    <title>Report a Problem</title>
     <link rel="stylesheet" href="style.css">
 </head> 
 
 <body>
     
    <!--<div class="problem-bar">
-        <div class="user-name">Zgłoś problem</div>
+        <div class="user-name">Report a Problem</div>
         <div class="status-circle"></div>
     </div>
 -->
-    <div class="top-bar">
+        <div class="top-bar">
         <div class="user-name">Welcome, User</div>
         <div class="dropdown">
             <button class="dropbtn">Menu &#9662;</button>
             <div class="dropdown-content">
                 <a href="main_page.html">Main Page</a>
-                <a href="#">Kontakt</a>
-                <a href="profile.html">Profil użytkownika</a>
-                <a href="login.html">Wyloguj</a>
+                <a href="#">Contact</a>
+                <a href="profile.html">User Profile</a>
+                <a href="login.html">Logout</a>
             </div>
         </div>
+    </div><div class="mobile-form">
+    <div class="main-content">
+        <form>
+            <div class="form-row">
+                <label class="form-label">Line Number</label>
+                <div class="form-input">
+                    <input type="number" placeholder="Line number" step="1">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <label class="form-label">Crowding Level</label>
+                <div class="form-input">
+                    <select>
+                        <option value="">Select crowding level</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Very high</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Delay</label>
+                <div class="form-input">
+                    <input type="number" placeholder="Minutes" step="1">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <label class="form-label">Vehicle Breakdown</label>
+                <div class="form-input">
+                    <select>
+                        <option value="">Select status</option>
+                        <option value="pending">Temporary breakdown</option>
+                        <option value="in-progress">Complete breakdown</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">How is the air conditioning working?</label>
+                <div class="form-input">
+                    <select>
+                        <option value="">Select an option</option>
+                        <option value="">Freezing</option>
+                        <option value="">Cool</option>
+                        <option value="">Good</option>
+                        <option value="">Too warm</option>
+                        <option value="pending">Oven</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Smell Impressions</label>
+                <div class="form-input">
+                    <select>
+                        <option value="">Select an option</option>
+                        <option value="">Violets</option>
+                        <option value="">Slightly smelly</option>
+                        <option value="">Smelly</option>
+                        <option value="">Very smelly</option>
+                    </select>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="mobile-form">
-        <div class="main-content">
-            <form>
-                <div class="form-row">
-                    <label class="form-label">Numer linii</label>
-                    <div class="form-input">
-                        <input type="number" placeholder="Numer linii" step="1">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">Poziom zatłoczenia</label>
-                    <div class="form-input">
-                        <select>
-                            <option value="">Wybierz poziom zatłoczenia</option>
-                            <option value="low">Niski</option>
-                            <option value="medium">Średni</option>
-                            <option value="high">Wysoki</option>
-                            <option value="urgent">Bardzo wysoki</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label class="form-label">Opóźnienie</label>
-                    <div class="form-input">
-                        <input type="number" placeholder="Minuty" step="1">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">Awaria pojazdu</label>
-                    <div class="form-input">
-                        <select>
-                            <option value="">Wybierz status</option>
-                            <option value="pending">Chwilowa awaria</option>
-                            <option value="in-progress">Całkowita awaria</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label class="form-label">Jak działa klimatyzacja?</label>
-                    <div class="form-input">
-                        <select>
-                            <option value="">Wybierz opcję</option>
-                            <option value="">Lodowato</option>
-                            <option value="">Chłodno</option>
-                            <option value="">Dobrze</option>
-                            <option value="">Za ciepło</option>
-                            <option value="pending">Piekarnik</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label class="form-label">Wrażenia zapachowe</label>
-                    <div class="form-input">
-                        <select>
-                            <option value="">Wybierz opcję</option>
-                            <option value="">Fiołki</option>
-                            <option value="">Lekko śmierdzi</option>
-                            <option value="">Cuchnie</option>
-                            <option value="">Bardzo śmierdzi</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    
     <button type="submit" class="submit-btn">
         <span>✈</span>
-        Zgłoś problem
+        Report Problem
     </button>
 </body>
 </html>
