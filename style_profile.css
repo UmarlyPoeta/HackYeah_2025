@@ -9,11 +9,6 @@
 }
 
 body {
-/*
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: var(--color-background);
-    margin: 0;
-    padding: 0;*/
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,24 +27,16 @@ body {
     flex-direction: column;
 }
 
-
-.container {/*
+.container {
+    background-color: var(--color-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    align-content: center;
     max-width: 600px;
-    margin: 32px auto;
-    background: var(--color-primary);
-    border-radius: 16px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-    padding: 32px 24px 24px 24px;
-*/
-background-color: var(--color-background);
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-text-align: center;
-align-content: center;
-max-width: 600px;
-width: 80%;
-z-index: 0;
+    width: 80%;
+    z-index: 0;
 }
 
 .avatar {
@@ -126,7 +113,7 @@ z-index: 0;
 }
 
 .stats-title {
-    font-size: 1.2rem;
+    font-size: 1.5rem; /* Made bigger */
     font-weight: 600;
     margin-bottom: 16px;
     color: var(--color-text);
@@ -135,37 +122,41 @@ z-index: 0;
 .stats-placeholder {
     background: #e9eef7;
     border-radius: 10px;
-    height: 180px;
+    height: 100px; /* Made shorter */
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: #888;
-    font-size: 1rem;
+    justify-content: flex-start; /* Align left */
+    padding-left: 20px; /* Add some left padding */
+}
+
+.prize-text {
+    font-size: 1.2rem; /* Made bigger */
+    color: var(--color-text); /* Made black */
+    text-align: left; /* Align left */
+    font-weight: 500;
 }
 
 .top-bar {
-    background-color: var(--color-background); /* #f7f7f7 - light gray 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    justify-content: space-between;*/
+    background-color: var(--color-background);
     top: 0;
     z-index: 100;
     width: 100%;
     position: fixed;
-    display: flex;                  /* horizontal layout */
-    align-items: center;            /* vertically center items */
-    gap: 15px;                      /* space between username and menu */
-    padding: 10px 20px;             /* nice spacing inside bar */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 20px;
     z-index: 1000;
-    justify-content: flex-start;    /* keep everything on the left */
+    justify-content: flex-start;
 }
+
 .user-name {
     margin-left: 5px;
     font-size: 16px;
     font-weight: 600;
     color: var(--color-text);
-    line-height: 36px; /* match approx height of dropbtn */
+    line-height: 36px;
 }
-
 
 .status-circle {
     width: 10px;
@@ -194,15 +185,14 @@ z-index: 0;
 .dropdown-content {
   display: none;
   position: absolute;
-  top: 100%; /* appear below the button */
-  right: 0;   /* align under button, not right corner */
+  top: 100%;
+  right: 0;
   background-color: #f9f9f9;
   min-width: 160px;
   box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
   border-radius: 4px;
   z-index: 999;
 }
-
 
 .dropdown-content a {
     color: #333;
@@ -222,4 +212,3 @@ z-index: 0;
 .dropdown:hover .dropbtn {
     background-color: var(--color-hover);
 }
-
