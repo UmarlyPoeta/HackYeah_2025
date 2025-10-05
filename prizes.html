@@ -5,6 +5,16 @@
     <title>Profil użytkownika</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root {
+            --color-background: #f7f7f7;
+            --color-primary: #fff;
+            --color-secondary: #38cf47;
+            --color-hover: #1f7c2b;
+            --color-text: #101010;
+            --color-text-secondary: #fff;
+            --color-grey: #aaaaaa;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +29,7 @@
         }
 
         .top-bar {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
+            background: linear-gradient(135deg, #2c3e50, var(--color-secondary));
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -108,7 +118,7 @@
             padding: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s, box-shadow 0.3s;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid var(--color-secondary);
         }
 
         .stats-section:hover {
@@ -145,13 +155,13 @@
 
         .progress {
             height: 100%;
-            background-color: #3498db;
+            background-color: var(--color-secondary);
             border-radius: 3px;
         }
 
         .points-value {
             font-weight: 600;
-            color: #3498db;
+            color: var(--color-hover);
             margin-left: auto;
         }
 
@@ -176,7 +186,7 @@
         }
 
         .total-points {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
+            background: linear-gradient(135deg, var(--color-secondary), #2c3e50);
             color: white;
             padding: 20px;
             border-radius: 10px;
