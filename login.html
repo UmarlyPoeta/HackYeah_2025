@@ -7,6 +7,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+
+    <script>
+    document.querySelector(".login-button").addEventListener("click", async () => {
+    const username = document.getElementById("login-name").value;
+    const password = document.getElementById("login-password").value;
+
+    const response = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+    });
+
+    const result = await response.text();
+    if (result === "success") {
+    alert("Zalogowano!");
+    // window.location.href = "/dashboard.html";
+    } else {
+    alert("Niepoprawne dane logowania");
+    }
+    });
+    </script>
 </head>
 <body>
     <div class="login-form">
